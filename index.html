@@ -352,12 +352,30 @@ tr:hover .rate-dim { color:var(--muted); }
   .edit-toggle { display: none !important; }
 
   /* ── KPI: 縦1列 ── */
+  /* ── 全体集計のKPI ── */
   .kpi-row { grid-template-columns: 1fr !important; gap: 8px !important; margin-bottom: 10px !important; }
   .kpi-big { padding: 14px 16px !important; }
   .kpi-big-value { font-size: 24px !important; }
   .kpi-big-label { font-size: 11px !important; }
   .kpi-small { padding: 12px 14px !important; }
   .kpi-small-value { font-size: 18px !important; }
+
+  /* ── サブヘッダー: 店名＋月タブに余裕を持たせる ── */
+  .subheader { padding: 10px 12px !important; gap: 8px !important; flex-wrap: wrap !important; }
+  .entity-name { font-size: 15px !important; font-weight: 900 !important; }
+  .entity-badge { padding: 3px 10px !important; }
+  .month-tabs { width: 100% !important; margin-left: 0 !important; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .month-tab { padding: 6px 10px !important; font-size: 12px !important; }
+
+  /* ── 店舗別KPIカード: 縦1列 ── */
+  #mainContent > div[style*="grid-template-columns:repeat(4"] { grid-template-columns: 1fr !important; gap: 8px !important; }
+  #mainContent > div[style*="grid-template-columns:repeat(2"] { grid-template-columns: 1fr !important; gap: 8px !important; }
+
+  /* ── PLテーブル＋チャート: 縦並び ── */
+  .chart-grid-2 { grid-template-columns: 1fr !important; }
+
+  /* ── 費用内訳: モバイルでは非表示 ── */
+  .chart-grid-2 > div:last-child > .card:last-child { display: none !important; }
 
   /* ── テーブル・カード ── */
   .detail-grid { grid-template-columns: 1fr !important; }
@@ -2131,46 +2149,71 @@ function renderDetail(entity) {
       + '<div class="hbar-track"><div class="hbar-fill" style="width:' + (i.v/maxC*100) + '%;background:' + i.color + '">' + inner + '</div></div></div>';
   }).join('');
 
-  document.getElementById('mainContent').innerHTML =
-    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px" class="anim">'
-    + kpiCard('純売上高',c.netRevenue,'var(--teal)','var(--teal-pale)',null,pyNR)
-    + kpiCard('粗利益',c.grossProfit,'var(--sky)','var(--sky-pale)',fmtR(c.grossRate),pyGP)
-    + kpiCard('人件費',c.laborTotal,'var(--orange)','var(--orange-pale)',fmtR(c.laborRate),py?.laborTotal||null)
-    + kpiCard('利益',c.profit,c.profit>=0?'var(--green)':'var(--red)',c.profit>=0?'var(--green-pale)':'var(--red-pale)',fmtR(c.profitRate),py?.profit||null)
-    + '</div>'
-    + '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:14px" class="anim anim-d1">'
-    + kpiCard('客数',c.customerCount,'var(--purple)','#f5f3ff','当月客数',py?.customerCount||null)
-    + kpiCard('客単価',c.customerUnit,'var(--pink)','#fdf2f8','売上÷客数',pyUnit)
-    + '</div>'
-    + memoHtml
-    + '<div class="chart-grid-2 anim anim-d1">'
-    + '<div class="card" style="overflow:hidden">'
-    + '<table class="pl-table"><thead><tr>'
-    + '<th>勘定科目</th><th style="text-align:right">今月（円）</th><th style="text-align:right">比率</th>'
-    + '</tr></thead><tbody>' + plRows + '</tbody></table></div>'
-    + '<div style="display:flex;flex-direction:column;gap:14px">'
-    + (() => {
-        // 年間売上推移グラフ（10月〜9月）
-        const fiscalMonths = ['10月','11月','12月','1月','2月','3月','4月','5月','6月','7月','8月','9月'];
-        const revenues = fiscalMonths.map(m => { const cc = calcEntity(entity, m); return cc ? cc.netRevenue : 0; });
-        const maxR = Math.max(...revenues, 1);
-        const barColors = fiscalMonths.map(m => m === state.activeMonth ? '#2ab4b4' : '#a5f3fc');
-        const H = 100;
-        const barsHtml = fiscalMonths.map((m, i) => {
-          const bh = Math.max(revenues[i] / maxR * H, 2);
-          const tp = H - bh;
-          const valStr = revenues[i] > 0 ? (revenues[i]/10000).toFixed(0)+'万' : '';
-          return `<div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'${m} 純売上: ${fmt(revenues[i])}円')" onmouseleave="hideTT()">
-            <div style="height:${tp}px;width:100%"></div>
-            <div style="height:${bh}px;background:${barColors[i]};border-radius:3px 3px 0 0;width:100%"></div>
-            <div style="font-size:9px;color:${barColors[i]};text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700">${valStr}</div>
-            <span class="wf-l" style="font-size:9px;${m===state.activeMonth?'color:#2ab4b4;font-weight:800':''}">${m.replace('月','')}</span>
-          </div>`;
-        }).join('');
-        return '<div class="card card-p"><div class="card-title">年間売上推移（10月〜9月）</div><div class="wf-wrap" style="align-items:flex-end">' + barsHtml + '</div></div>';
-      })()
-    + '<div class="card card-p"><div class="card-title">費用内訳（上位）</div>' + hbarHtml + '</div>'
-    + '</div></div>';
+  // モバイル判定
+  const isMob = window.innerWidth <= 768;
+  const kpi4cols = isMob ? '1fr' : 'repeat(4,1fr)';
+  const kpi2cols = isMob ? '1fr' : 'repeat(2,1fr)';
+
+  // 年間売上推移グラフ
+  const fiscalMonths = ['10月','11月','12月','1月','2月','3月','4月','5月','6月','7月','8月','9月'];
+  const revenues = fiscalMonths.map(m => { const cc = calcEntity(entity, m); return cc ? cc.netRevenue : 0; });
+  const maxR = Math.max(...revenues, 1);
+  const barColors = fiscalMonths.map(m => m === state.activeMonth ? '#2ab4b4' : '#a5f3fc');
+  const chartH = 100;
+  const barsHtml = fiscalMonths.map((m, i) => {
+    const bh = Math.max(revenues[i] / maxR * chartH, 2);
+    const tp = chartH - bh;
+    const valStr = revenues[i] > 0 ? (revenues[i]/10000).toFixed(0)+'万' : '';
+    return `<div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'${m} 純売上: ${fmt(revenues[i])}円')" onmouseleave="hideTT()">
+      <div style="height:${tp}px;width:100%"></div>
+      <div style="height:${bh}px;background:${barColors[i]};border-radius:3px 3px 0 0;width:100%"></div>
+      <div style="font-size:9px;color:${barColors[i]};text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700">${valStr}</div>
+      <span class="wf-l" style="font-size:9px;${m===state.activeMonth?'color:#2ab4b4;font-weight:800':''}">${m.replace('月','')}</span>
+    </div>`;
+  }).join('');
+  const chartCard = '<div class="card card-p"><div class="card-title">年間売上推移（10月〜9月）</div><div class="wf-wrap" style="align-items:flex-end">' + barsHtml + '</div></div>';
+  const costCard = '<div class="card card-p"><div class="card-title">費用内訳（上位）</div>' + hbarHtml + '</div>';
+
+  if (isMob) {
+    // モバイル: 縦1列レイアウト
+    document.getElementById('mainContent').innerHTML =
+      '<div style="display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px" class="anim">'
+      + kpiCard('純売上高',c.netRevenue,'var(--teal)','var(--teal-pale)',null,pyNR)
+      + kpiCard('粗利益',c.grossProfit,'var(--sky)','var(--sky-pale)',fmtR(c.grossRate),pyGP)
+      + kpiCard('人件費',c.laborTotal,'var(--orange)','var(--orange-pale)',fmtR(c.laborRate),py?.laborTotal||null)
+      + kpiCard('利益',c.profit,c.profit>=0?'var(--green)':'var(--red)',c.profit>=0?'var(--green-pale)':'var(--red-pale)',fmtR(c.profitRate),py?.profit||null)
+      + kpiCard('客数',c.customerCount,'var(--purple)','#f5f3ff','当月客数',py?.customerCount||null)
+      + kpiCard('客単価',c.customerUnit,'var(--pink)','#fdf2f8','売上÷客数',pyUnit)
+      + '</div>'
+      + memoHtml
+      + '<div class="card" style="overflow:hidden;margin-bottom:8px">'
+      + '<table class="pl-table"><thead><tr>'
+      + '<th>勘定科目</th><th style="text-align:right">今月（円）</th><th style="text-align:right">比率</th>'
+      + '</tr></thead><tbody>' + plRows + '</tbody></table></div>'
+      + chartCard;
+  } else {
+    // デスクトップ: 従来レイアウト
+    document.getElementById('mainContent').innerHTML =
+      '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px" class="anim">'
+      + kpiCard('純売上高',c.netRevenue,'var(--teal)','var(--teal-pale)',null,pyNR)
+      + kpiCard('粗利益',c.grossProfit,'var(--sky)','var(--sky-pale)',fmtR(c.grossRate),pyGP)
+      + kpiCard('人件費',c.laborTotal,'var(--orange)','var(--orange-pale)',fmtR(c.laborRate),py?.laborTotal||null)
+      + kpiCard('利益',c.profit,c.profit>=0?'var(--green)':'var(--red)',c.profit>=0?'var(--green-pale)':'var(--red-pale)',fmtR(c.profitRate),py?.profit||null)
+      + '</div>'
+      + '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:14px" class="anim anim-d1">'
+      + kpiCard('客数',c.customerCount,'var(--purple)','#f5f3ff','当月客数',py?.customerCount||null)
+      + kpiCard('客単価',c.customerUnit,'var(--pink)','#fdf2f8','売上÷客数',pyUnit)
+      + '</div>'
+      + memoHtml
+      + '<div class="chart-grid-2 anim anim-d1">'
+      + '<div class="card" style="overflow:hidden">'
+      + '<table class="pl-table"><thead><tr>'
+      + '<th>勘定科目</th><th style="text-align:right">今月（円）</th><th style="text-align:right">比率</th>'
+      + '</tr></thead><tbody>' + plRows + '</tbody></table></div>'
+      + '<div style="display:flex;flex-direction:column;gap:14px">'
+      + chartCard + costCard
+      + '</div></div>';
+  }
 }
 
 // ══════════════════════════════════════
