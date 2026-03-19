@@ -322,80 +322,119 @@ tr:hover .rate-dim { color:var(--muted); }
 #printArea { display: none; }
 
 /* ══ モバイル対応 ══ */
-.mobile-menu-btn { display:none; background:none; border:none; color:#fff; font-size:22px; cursor:pointer; padding:8px 10px; line-height:1; -webkit-tap-highlight-color:transparent; }
-.mobile-sidebar-btn { display:none; background:none; border:none; color:#fff; font-size:24px; cursor:pointer; padding:8px 10px; line-height:1; -webkit-tap-highlight-color:transparent; }
+/* ══ モバイル専用要素（デスクトップでは非表示） ══ */
+.mobile-menu-btn, .mobile-sidebar-btn { display:none; }
+.mob-bottombar, .mob-store-sheet, .mob-tools-sheet, .mob-sheet-overlay { display:none; }
 
 @media (max-width: 768px) {
-  /* トップバー: コンパクト化 */
-  .topbar { padding: 0 4px !important; gap: 4px !important; height: 44px !important; }
-  .topbar-right { gap: 0; }
-  .topbar-right > * { display: none !important; }
-  .topbar-right > .mobile-menu-btn { display: inline-flex !important; }
-  .mobile-sidebar-btn { display: inline-flex !important; }
-  .topbar-title { display: none !important; }
+  /* ── トップバー: シンプルに ── */
+  .topbar { padding: 0 12px !important; gap: 8px !important; height: 44px !important; }
+  .topbar-right { display: none !important; }
   .topbar-sep { display: none !important; }
-  .logo { font-size: 12px; gap: 4px; }
-  .logo-icon { width: 20px; height: 20px; font-size: 10px; }
+  .topbar-title { display: none !important; }
+  .logo { font-size: 13px; gap: 5px; }
+  .logo-icon { width: 22px; height: 22px; font-size: 10px; }
 
-  /* サイドバー: デフォルト非表示、トグルで表示 */
-  .sidebar {
-    position: fixed !important; left: -260px; top: 44px; bottom: 0;
-    width: 240px !important; z-index: 500;
-    transition: left .25s ease;
-    box-shadow: 4px 0 20px rgba(0,0,0,.3);
-  }
-  .sidebar.mobile-open { left: 0; }
-  .sidebar-overlay {
-    display: none; position: fixed; inset: 0; top: 44px;
-    background: rgba(0,0,0,.4); z-index: 499;
-  }
-  .sidebar-overlay.show { display: block; }
+  /* ── サイドバー: 完全非表示（ボトムシートに置き換え） ── */
+  .sidebar { display: none !important; }
 
-  /* メインコンテンツ: フル幅 */
+  /* ── メイン: フル幅 + 下にボトムバー分の余白 ── */
   .main { margin-left: 0 !important; }
   .app { height: calc(100vh - 44px); }
+  .content { padding: 10px 10px 70px !important; }
 
-  /* モバイルメニュー（ドロップダウン） */
-  .mobile-menu {
-    display: none; position: fixed; top: 44px; right: 0; left: 0;
-    background: var(--sidebar-bg); z-index: 600;
-    padding: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.3);
-    flex-wrap: wrap; gap: 6px; justify-content: center;
-  }
-  .mobile-menu.show { display: flex; }
-  .mobile-menu .btn {
-    display: inline-flex !important;
-    font-size: 10px !important; padding: 6px 10px !important;
-    white-space: nowrap; flex-shrink: 0;
-  }
+  /* ── サブヘッダー: 店名＋月タブ横スクロール ── */
+  .subheader { flex-wrap: nowrap; padding: 6px 10px !important; gap: 6px !important; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .entity-name { font-size: 13px !important; white-space: nowrap; flex-shrink: 0; }
+  .entity-badge { font-size: 9px !important; flex-shrink: 0; }
+  .month-tabs { flex-shrink: 0; }
+  .month-tab { padding: 5px 10px !important; font-size: 11px !important; min-width: 30px; flex-shrink: 0; }
+  .edit-toggle { display: none !important; }
 
-  /* サブヘッダー（月タブ＋店名帯） */
-  .subheader { flex-wrap: nowrap; padding: 4px 8px !important; gap: 4px !important; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .month-tab { padding: 4px 8px !important; font-size: 10px !important; min-width: 28px; flex-shrink: 0; }
+  /* ── KPI: 縦1列 ── */
+  .kpi-row { grid-template-columns: 1fr !important; gap: 8px !important; margin-bottom: 10px !important; }
+  .kpi-big { padding: 14px 16px !important; }
+  .kpi-big-value { font-size: 24px !important; }
+  .kpi-big-label { font-size: 11px !important; }
+  .kpi-small { padding: 12px 14px !important; }
+  .kpi-small-value { font-size: 18px !important; }
 
-  /* KPIカード: 縦1列で横スクロール不要 */
-  .kpi-grid { grid-template-columns: 1fr !important; gap: 6px !important; }
-  .kpi-card { padding: 10px 14px !important; }
-  .kpi-card .kv { font-size: 20px !important; }
-  .kpi-card .kl { font-size: 10px !important; }
-
-  /* 詳細テーブル */
+  /* ── テーブル・カード ── */
   .detail-grid { grid-template-columns: 1fr !important; }
   .pl-table { font-size: 11px !important; }
-  .pl-table td, .pl-table th { padding: 3px 6px !important; }
-
-  /* 編集フォーム */
+  .pl-table td, .pl-table th { padding: 4px 6px !important; }
   .form-grid { grid-template-columns: 1fr !important; }
-  .card-p { padding: 10px !important; }
-
-  /* メインのパディング縮小 */
-  .main { padding: 8px !important; }
-
-  /* 店舗ランキング */
+  .card-p { padding: 12px !important; }
+  .card { margin-bottom: 8px !important; }
   .rank-wrap { padding: 10px !important; }
 
-  /* 編集モードボタン */
-  .btn { font-size: 10px !important; padding: 4px 10px !important; }
+  /* ── ボトムナビバー ── */
+  .mob-bottombar {
+    display: flex !important; position: fixed; bottom: 0; left: 0; right: 0;
+    height: 56px; background: var(--sidebar-bg); z-index: 800;
+    box-shadow: 0 -2px 12px rgba(0,0,0,.2);
+    justify-content: space-around; align-items: center;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .mob-nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    color: rgba(255,255,255,.5); font-size: 9px; font-weight: 600;
+    padding: 6px 16px; border-radius: 8px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent; transition: color .15s;
+    background: none; border: none; font-family: 'Noto Sans JP', sans-serif;
+  }
+  .mob-nav-item:active { color: #fff; background: rgba(255,255,255,.1); }
+  .mob-nav-icon { font-size: 20px; line-height: 1; }
+
+  /* ── ボトムシート共通 ── */
+  .mob-sheet-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 899;
+  }
+  .mob-sheet-overlay.show { display: block; }
+  .mob-store-sheet, .mob-tools-sheet {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0;
+    background: #fff; z-index: 900;
+    border-radius: 16px 16px 0 0; box-shadow: 0 -8px 30px rgba(0,0,0,.2);
+    max-height: 70vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding-bottom: env(safe-area-inset-bottom);
+    transition: transform .3s ease;
+  }
+  .mob-store-sheet.show, .mob-tools-sheet.show { display: block; }
+  .mob-sheet-handle {
+    width: 36px; height: 4px; background: #cbd5e1; border-radius: 2px;
+    margin: 10px auto 6px;
+  }
+  .mob-sheet-title {
+    font-size: 14px; font-weight: 800; padding: 4px 20px 10px;
+    color: var(--text); border-bottom: 1px solid var(--border);
+  }
+  .mob-store-item {
+    display: flex; align-items: center; gap: 10px; padding: 12px 20px;
+    border-bottom: 1px solid var(--border); cursor: pointer; font-size: 14px;
+    color: var(--text); -webkit-tap-highlight-color: transparent;
+  }
+  .mob-store-item:active { background: var(--bg); }
+  .mob-store-item.active { color: var(--teal-dark); font-weight: 700; background: var(--teal-pale); }
+  .mob-store-item .mob-store-badge {
+    font-family: 'DM Mono', monospace; font-size: 11px; margin-left: auto;
+    font-weight: 600;
+  }
+  .mob-store-cat {
+    font-size: 10px; font-weight: 800; color: var(--muted); padding: 10px 20px 4px;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .mob-tools-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 16px;
+  }
+  .mob-tool-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    padding: 14px 8px; border-radius: 12px; border: 1px solid var(--border);
+    background: var(--surface); cursor: pointer; font-size: 10px; font-weight: 600;
+    color: var(--text2); font-family: 'Noto Sans JP', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mob-tool-btn:active { background: var(--bg); }
+  .mob-tool-icon { font-size: 22px; }
 }
 </style>
 </head>
@@ -404,7 +443,6 @@ tr:hover .rate-dim { color:var(--muted); }
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <button class="mobile-sidebar-btn" onclick="toggleMobileSidebar()" title="メニュー">☰</button>
   <div class="logo"><div class="logo-icon">PL</div>ダッシュボード</div>
   <div class="topbar-sep"></div>
   <div class="topbar-title" id="topTitle">マルチ店舗管理</div>
@@ -423,20 +461,50 @@ tr:hover .rate-dim { color:var(--muted); }
     <button class="btn btn-sm" style="background:#dc2626;color:#fff;border:none;padding:5px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif" onclick="exportPdf()">🖨️ PDF出力</button>
     <button class="btn btn-primary btn-sm" onclick="saveAndRefresh()">💾 保存・反映</button>
     <button id="pwaInstallBtn" class="btn btn-sm" style="background:#7c3aed;color:#fff;border:none;padding:5px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;gap:4px" onclick="installPWA()">📲 アプリ化</button>
-    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" title="その他">⋯</button>
   </div>
 </div>
-<div class="mobile-menu" id="mobileMenu">
-  <button class="btn btn-ghost btn-sm" onclick="openCsvModal();closeMobileMenu()">📥 CSV</button>
-  <button class="btn btn-ghost btn-sm" onclick="importHelpAdj();closeMobileMenu()">📋 ヘルプ調整</button>
-  <button class="btn btn-ghost btn-sm" onclick="document.getElementById('pdfFileInput').click();closeMobileMenu()">📄 請求PDF</button>
-  <button class="btn btn-ghost btn-sm" onclick="exportCsv();closeMobileMenu()">📤 出力</button>
-  <button class="btn btn-ghost btn-sm" onclick="saveDataJson();closeMobileMenu()">💾 データ保存</button>
-  <button class="btn btn-ghost btn-sm" onclick="saveHtml();closeMobileMenu()">💾 HTML</button>
-  <button class="btn btn-ghost btn-sm" onclick="saveAndRefresh();closeMobileMenu()">💾 反映</button>
-  <button class="btn btn-ghost btn-sm" onclick="exportPdf();closeMobileMenu()" style="background:rgba(220,38,38,.3)">🖨️ PDF</button>
+<!-- モバイル: ボトムナビバー -->
+<div class="mob-bottombar">
+  <button class="mob-nav-item" onclick="mobOpenStoreSheet()">
+    <span class="mob-nav-icon">🏪</span>店舗切替
+  </button>
+  <button class="mob-nav-item" onclick="toggleEdit()">
+    <span class="mob-nav-icon">✏️</span>編集
+  </button>
+  <button class="mob-nav-item" onclick="saveAndRefresh()">
+    <span class="mob-nav-icon">💾</span>保存
+  </button>
+  <button class="mob-nav-item" onclick="mobOpenToolsSheet()">
+    <span class="mob-nav-icon">⚙️</span>ツール
+  </button>
 </div>
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileSidebar()"></div>
+
+<!-- モバイル: オーバーレイ -->
+<div class="mob-sheet-overlay" id="mobSheetOverlay" onclick="mobCloseAllSheets()"></div>
+
+<!-- モバイル: 店舗選択ボトムシート -->
+<div class="mob-store-sheet" id="mobStoreSheet">
+  <div class="mob-sheet-handle"></div>
+  <div class="mob-sheet-title">店舗を選択</div>
+  <div id="mobStoreList"></div>
+</div>
+
+<!-- モバイル: ツールボトムシート -->
+<div class="mob-tools-sheet" id="mobToolsSheet">
+  <div class="mob-sheet-handle"></div>
+  <div class="mob-sheet-title">ツール</div>
+  <div class="mob-tools-grid">
+    <button class="mob-tool-btn" onclick="openCsvModal();mobCloseAllSheets()"><span class="mob-tool-icon">📥</span>CSV取込</button>
+    <button class="mob-tool-btn" onclick="importHelpAdj();mobCloseAllSheets()"><span class="mob-tool-icon">📋</span>ヘルプ調整</button>
+    <button class="mob-tool-btn" onclick="document.getElementById('pdfFileInput').click();mobCloseAllSheets()"><span class="mob-tool-icon">📄</span>請求PDF</button>
+    <button class="mob-tool-btn" onclick="exportCsv();mobCloseAllSheets()"><span class="mob-tool-icon">📤</span>エクスポート</button>
+    <button class="mob-tool-btn" onclick="saveHtml();mobCloseAllSheets()"><span class="mob-tool-icon">💾</span>HTML保存</button>
+    <button class="mob-tool-btn" onclick="exportPdf();mobCloseAllSheets()"><span class="mob-tool-icon">🖨️</span>PDF出力</button>
+    <button class="mob-tool-btn" onclick="saveDataJson();mobCloseAllSheets()"><span class="mob-tool-icon">📂</span>データ保存</button>
+    <button class="mob-tool-btn" onclick="document.getElementById('jsonFileInput').click();mobCloseAllSheets()"><span class="mob-tool-icon">📁</span>データ読込</button>
+    <button class="mob-tool-btn" onclick="installPWA();mobCloseAllSheets()"><span class="mob-tool-icon">📲</span>アプリ化</button>
+  </div>
+</div>
 
 <div class="app">
   <!-- SIDEBAR -->
@@ -1366,16 +1434,7 @@ function renderSubheader() {
 }
 
 function setMonth(m) { state.activeMonth=m; render(); }
-function setActive(id) {
-  state.activeId=id; state.editMode=false; render();
-  // モバイル: サイドバーを自動で閉じる
-  const sb = document.querySelector('.sidebar');
-  const ov = document.getElementById('sidebarOverlay');
-  if (sb && sb.classList.contains('mobile-open')) {
-    sb.classList.remove('mobile-open');
-    if (ov) ov.classList.remove('show');
-  }
-}
+function setActive(id) { state.activeId=id; state.editMode=false; render(); }
 function toggleEdit() { state.editMode=!state.editMode; render(); }
 
 // ══════════════════════════════════════
@@ -3504,13 +3563,31 @@ if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded"
 // ══════════════════════════════════════
 //  PWA: Service Worker（インライン登録）
 // ══════════════════════════════════════
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(() => {});
+// アプリバージョン管理（更新ごとに変更）
+const APP_VERSION = '2025031902';
 
-  // 更新チェック: 新しいSWがactivateされたらリロード促す
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then(reg => {
+    // 起動時に毎回更新チェック
+    reg.update();
+    // 新しいSWが見つかったら即アクティベート
+    reg.addEventListener('updatefound', () => {
+      const newSW = reg.installing;
+      if (newSW) {
+        newSW.addEventListener('statechange', () => {
+          if (newSW.state === 'activated') {
+            // 新バージョン検知 → 自動リロード
+            window.location.reload();
+          }
+        });
+      }
+    });
+  }).catch(() => {});
+
+  // controller変更時にリロード
   let refreshing = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (!refreshing) { refreshing = true; /* silent reload on next visit */ }
+    if (!refreshing) { refreshing = true; window.location.reload(); }
   });
 }
 
@@ -3524,31 +3601,56 @@ window.addEventListener('beforeinstallprompt', e => {
   if (btn) btn.style.display = 'inline-flex';
 });
 
-// ── モバイルUI制御 ──
-function toggleMobileSidebar() {
-  const sb = document.querySelector('.sidebar');
-  const ov = document.getElementById('sidebarOverlay');
-  sb.classList.toggle('mobile-open');
-  ov.classList.toggle('show');
-  closeMobileMenu();
+// ── モバイルUI制御（ボトムシート） ──
+const CATS_ORDER = [
+  { key: 'overview', label: '📊 サマリー' },
+  { key: 'ramen', label: '🍜 ラーメン部門' },
+  { key: 'izakaya', label: '🍺 居酒屋部門' },
+  { key: 'hq', label: '🏢 本部' },
+];
+
+function mobOpenStoreSheet() {
+  mobCloseAllSheets();
+  const list = document.getElementById('mobStoreList');
+  let h = '';
+  CATS_ORDER.forEach(cat => {
+    const ents = cat.key === 'overview'
+      ? state.entities.filter(e => e.id === 'overview')
+      : state.entities.filter(e => e.category === cat.key);
+    if (ents.length === 0) return;
+    h += '<div class="mob-store-cat">' + cat.label + ' (' + ents.length + ')</div>';
+    ents.forEach(e => {
+      const c = calcEntity(e, state.activeMonth);
+      const badge = c && c.profit ? fmtW(c.profit) : '';
+      const badgeColor = c && c.profit >= 0 ? 'var(--green)' : 'var(--red)';
+      h += '<div class="mob-store-item' + (state.activeId === e.id ? ' active' : '') + '" onclick="mobSelectStore(\'' + e.id + '\')">'
+        + '<span>' + e.name + '</span>'
+        + (badge ? '<span class="mob-store-badge" style="color:' + badgeColor + '">' + badge + '</span>' : '')
+        + '</div>';
+    });
+  });
+  list.innerHTML = h;
+  document.getElementById('mobStoreSheet').classList.add('show');
+  document.getElementById('mobSheetOverlay').classList.add('show');
 }
-function toggleMobileMenu() {
-  document.getElementById('mobileMenu').classList.toggle('show');
+
+function mobSelectStore(id) {
+  mobCloseAllSheets();
+  state.activeId = id; state.editMode = false;
+  render();
 }
-function closeMobileMenu() {
-  document.getElementById('mobileMenu').classList.remove('show');
+
+function mobOpenToolsSheet() {
+  mobCloseAllSheets();
+  document.getElementById('mobToolsSheet').classList.add('show');
+  document.getElementById('mobSheetOverlay').classList.add('show');
 }
-// サイドバーの店舗クリック時にモバイルではサイドバーを自動で閉じる
-document.addEventListener('click', function(e) {
-  if (e.target.closest && e.target.closest('.sidebar-item')) {
-    const sb = document.querySelector('.sidebar');
-    const ov = document.getElementById('sidebarOverlay');
-    if (sb.classList.contains('mobile-open')) {
-      sb.classList.remove('mobile-open');
-      ov.classList.remove('show');
-    }
-  }
-});
+
+function mobCloseAllSheets() {
+  document.getElementById('mobStoreSheet').classList.remove('show');
+  document.getElementById('mobToolsSheet').classList.remove('show');
+  document.getElementById('mobSheetOverlay').classList.remove('show');
+}
 
 function installPWA() {
   if (_deferredInstall) {
