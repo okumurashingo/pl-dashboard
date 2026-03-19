@@ -360,22 +360,27 @@ tr:hover .rate-dim { color:var(--muted); }
   .kpi-small { padding: 12px 14px !important; }
   .kpi-small-value { font-size: 18px !important; }
 
-  /* ── サブヘッダー: 店名＋月タブに余裕を持たせる ── */
-  .subheader { padding: 10px 12px !important; gap: 8px !important; flex-wrap: wrap !important; position: sticky !important; top: 0 !important; z-index: 200 !important; }
-  .entity-name { font-size: 15px !important; font-weight: 900 !important; }
-  .entity-badge { padding: 3px 10px !important; }
-  .month-tabs { width: 100% !important; margin-left: 0 !important; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .month-tab { padding: 6px 10px !important; font-size: 12px !important; }
+  /* ── アプリ全体の高さ修正 ── */
+  .app { height: calc(100vh - 44px) !important; }
 
-  /* ── 店舗別KPIカード: 縦1列 ── */
-  #mainContent > div[style*="grid-template-columns:repeat(4"] { grid-template-columns: 1fr !important; gap: 8px !important; }
-  #mainContent > div[style*="grid-template-columns:repeat(2"] { grid-template-columns: 1fr !important; gap: 8px !important; }
+  /* ── サブヘッダー: 店名と月タブを2段に ── */
+  .subheader {
+    padding: 8px 12px !important; gap: 6px !important;
+    flex-wrap: wrap !important;
+    position: sticky !important; top: 0 !important; z-index: 200 !important;
+  }
+  .entity-name { font-size: 14px !important; font-weight: 900 !important; }
+  .entity-badge { padding: 3px 10px !important; font-size: 9px !important; }
+  .month-tabs {
+    width: 100% !important; margin-left: 0 !important;
+    overflow-x: auto !important; -webkit-overflow-scrolling: touch !important;
+    flex-shrink: 0 !important;
+  }
+  .month-tab { padding: 6px 10px !important; font-size: 12px !important; flex-shrink: 0 !important; }
+  .edit-toggle { display: none !important; }
 
-  /* ── PLテーブル＋チャート: 縦並び ── */
+  /* ── チャート: 縦並び ── */
   .chart-grid-2 { grid-template-columns: 1fr !important; }
-
-  /* ── 費用内訳: モバイルでは非表示 ── */
-  .chart-grid-2 > div:last-child > .card:last-child { display: none !important; }
 
   /* ── テーブル・カード ── */
   .detail-grid { grid-template-columns: 1fr !important; }

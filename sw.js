@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pl-dashboard-v6';
+const CACHE_NAME = 'pl-dashboard-v7';
 
 self.addEventListener('install', e => {
   e.waitUntil(
