@@ -373,11 +373,11 @@ tr:hover .rate-dim { color:var(--muted); }
   .subheader { flex-wrap: nowrap; padding: 4px 8px !important; gap: 4px !important; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .month-tab { padding: 4px 8px !important; font-size: 10px !important; min-width: 28px; flex-shrink: 0; }
 
-  /* KPIカード */
-  .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
-  .kpi-card { padding: 10px !important; }
-  .kpi-card .kv { font-size: 16px !important; }
-  .kpi-card .kl { font-size: 9px !important; }
+  /* KPIカード: 縦1列で横スクロール不要 */
+  .kpi-grid { grid-template-columns: 1fr !important; gap: 6px !important; }
+  .kpi-card { padding: 10px 14px !important; }
+  .kpi-card .kv { font-size: 20px !important; }
+  .kpi-card .kl { font-size: 10px !important; }
 
   /* 詳細テーブル */
   .detail-grid { grid-template-columns: 1fr !important; }
@@ -1366,7 +1366,16 @@ function renderSubheader() {
 }
 
 function setMonth(m) { state.activeMonth=m; render(); }
-function setActive(id) { state.activeId=id; state.editMode=false; render(); }
+function setActive(id) {
+  state.activeId=id; state.editMode=false; render();
+  // モバイル: サイドバーを自動で閉じる
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  if (sb && sb.classList.contains('mobile-open')) {
+    sb.classList.remove('mobile-open');
+    if (ov) ov.classList.remove('show');
+  }
+}
 function toggleEdit() { state.editMode=!state.editMode; render(); }
 
 // ══════════════════════════════════════
