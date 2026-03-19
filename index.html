@@ -3612,31 +3612,13 @@ if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded"
 // ══════════════════════════════════════
 //  PWA: Service Worker（インライン登録）
 // ══════════════════════════════════════
-// アプリバージョン管理（更新ごとに変更）
-const APP_VERSION = '2025031902';
-
+// SW を完全に解除してキャッシュもクリア（開発中はSW無効）
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').then(reg => {
-    // 起動時に毎回更新チェック
-    reg.update();
-    // 新しいSWが見つかったら即アクティベート
-    reg.addEventListener('updatefound', () => {
-      const newSW = reg.installing;
-      if (newSW) {
-        newSW.addEventListener('statechange', () => {
-          if (newSW.state === 'activated') {
-            // 新バージョン検知 → 自動リロード
-            window.location.reload();
-          }
-        });
-      }
-    });
-  }).catch(() => {});
-
-  // controller変更時にリロード
-  let refreshing = false;
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (!refreshing) { refreshing = true; window.location.reload(); }
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(r => r.unregister());
+  });
+  caches.keys().then(names => {
+    names.forEach(n => caches.delete(n));
   });
 }
 
