@@ -396,19 +396,20 @@ tr:hover .rate-dim { color:var(--muted); }
   /* ── ボトムナビバー ── */
   .mob-bottombar {
     display: flex !important; position: fixed; bottom: 0; left: 0; right: 0;
-    height: 56px; background: var(--sidebar-bg); z-index: 800;
+    height: calc(50px + env(safe-area-inset-bottom)); background: var(--sidebar-bg); z-index: 800;
     box-shadow: 0 -2px 12px rgba(0,0,0,.2);
-    justify-content: space-around; align-items: center;
+    justify-content: center; align-items: center;
     padding-bottom: env(safe-area-inset-bottom);
   }
   .mob-nav-item {
-    display: flex; flex-direction: column; align-items: center; gap: 2px;
-    color: rgba(255,255,255,.5); font-size: 9px; font-weight: 600;
-    padding: 6px 16px; border-radius: 8px; cursor: pointer;
-    -webkit-tap-highlight-color: transparent; transition: color .15s;
-    background: none; border: none; font-family: 'Noto Sans JP', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    color: rgba(255,255,255,.8); font-size: 14px; font-weight: 700;
+    padding: 10px 32px; border-radius: 10px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    background: rgba(42,180,180,.25); border: 1px solid rgba(42,180,180,.4);
+    font-family: 'Noto Sans JP', sans-serif;
   }
-  .mob-nav-item:active { color: #fff; background: rgba(255,255,255,.1); }
+  .mob-nav-item:active { background: rgba(42,180,180,.5); color: #fff; }
   .mob-nav-icon { font-size: 20px; line-height: 1; }
 
   /* ── ボトムシート共通 ── */
@@ -490,17 +491,8 @@ tr:hover .rate-dim { color:var(--muted); }
 </div>
 <!-- モバイル: ボトムナビバー -->
 <div class="mob-bottombar">
-  <button class="mob-nav-item" onclick="mobOpenStoreSheet()">
-    <span class="mob-nav-icon">🏪</span>店舗切替
-  </button>
-  <button class="mob-nav-item" onclick="toggleEdit()">
-    <span class="mob-nav-icon">✏️</span>編集
-  </button>
-  <button class="mob-nav-item" onclick="saveAndRefresh()">
-    <span class="mob-nav-icon">💾</span>保存
-  </button>
-  <button class="mob-nav-item" onclick="mobOpenToolsSheet()">
-    <span class="mob-nav-icon">⚙️</span>ツール
+  <button class="mob-nav-item" onclick="mobOpenStoreSheet()" style="flex:1">
+    <span class="mob-nav-icon">🏪</span>店舗を切り替える
   </button>
 </div>
 
@@ -514,22 +506,7 @@ tr:hover .rate-dim { color:var(--muted); }
   <div id="mobStoreList"></div>
 </div>
 
-<!-- モバイル: ツールボトムシート -->
-<div class="mob-tools-sheet" id="mobToolsSheet">
-  <div class="mob-sheet-handle"></div>
-  <div class="mob-sheet-title">ツール</div>
-  <div class="mob-tools-grid">
-    <button class="mob-tool-btn" onclick="openCsvModal();mobCloseAllSheets()"><span class="mob-tool-icon">📥</span>CSV取込</button>
-    <button class="mob-tool-btn" onclick="importHelpAdj();mobCloseAllSheets()"><span class="mob-tool-icon">📋</span>ヘルプ調整</button>
-    <button class="mob-tool-btn" onclick="document.getElementById('pdfFileInput').click();mobCloseAllSheets()"><span class="mob-tool-icon">📄</span>請求PDF</button>
-    <button class="mob-tool-btn" onclick="exportCsv();mobCloseAllSheets()"><span class="mob-tool-icon">📤</span>エクスポート</button>
-    <button class="mob-tool-btn" onclick="saveHtml();mobCloseAllSheets()"><span class="mob-tool-icon">💾</span>HTML保存</button>
-    <button class="mob-tool-btn" onclick="exportPdf();mobCloseAllSheets()"><span class="mob-tool-icon">🖨️</span>PDF出力</button>
-    <button class="mob-tool-btn" onclick="saveDataJson();mobCloseAllSheets()"><span class="mob-tool-icon">📂</span>データ保存</button>
-    <button class="mob-tool-btn" onclick="document.getElementById('jsonFileInput').click();mobCloseAllSheets()"><span class="mob-tool-icon">📁</span>データ読込</button>
-    <button class="mob-tool-btn" onclick="installPWA();mobCloseAllSheets()"><span class="mob-tool-icon">📲</span>アプリ化</button>
-  </div>
-</div>
+<!-- ツールシートはモバイル閲覧版では非表示 -->
 
 <div class="app">
   <!-- SIDEBAR -->
