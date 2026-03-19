@@ -320,6 +320,82 @@ tr:hover .rate-dim { color:var(--muted); }
   a { text-decoration: none !important; color: inherit !important; }
 }
 #printArea { display: none; }
+
+/* ══ モバイル対応 ══ */
+.mobile-menu-btn { display:none; background:none; border:none; color:#fff; font-size:20px; cursor:pointer; padding:4px 8px; line-height:1; }
+.mobile-sidebar-btn { display:none; background:none; border:none; color:#fff; font-size:18px; cursor:pointer; padding:4px 8px; line-height:1; }
+
+@media (max-width: 768px) {
+  /* サイドバー: デフォルト非表示、トグルで表示 */
+  .sidebar {
+    position: fixed !important; left: -260px; top: 50px; bottom: 0;
+    width: 240px !important; z-index: 500;
+    transition: left .25s ease;
+    box-shadow: 4px 0 20px rgba(0,0,0,.3);
+  }
+  .sidebar.mobile-open { left: 0; }
+  .sidebar-overlay {
+    display: none; position: fixed; inset: 0; top: 50px;
+    background: rgba(0,0,0,.4); z-index: 499;
+  }
+  .sidebar-overlay.show { display: block; }
+
+  /* メインコンテンツ: フル幅 */
+  .main { margin-left: 0 !important; }
+
+  /* トップバー: ボタンを隠してハンバーガー表示 */
+  .topbar { padding: 0 10px; gap: 8px; }
+  .topbar-right { gap: 4px; }
+  .topbar-right > .btn,
+  .topbar-right > .topbar-sep,
+  .topbar-right > input[type="file"] { display: none !important; }
+  .mobile-menu-btn { display: inline-flex !important; }
+  .mobile-sidebar-btn { display: inline-flex !important; }
+  .topbar-title { font-size: 11px; }
+  .logo { font-size: 13px; }
+
+  /* モバイルメニュー（ドロップダウン） */
+  .mobile-menu {
+    display: none; position: fixed; top: 50px; right: 0; left: 0;
+    background: var(--sidebar-bg); z-index: 600;
+    padding: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.3);
+    flex-wrap: wrap; gap: 6px; justify-content: center;
+  }
+  .mobile-menu.show { display: flex; }
+  .mobile-menu .btn {
+    font-size: 10px !important; padding: 6px 10px !important;
+    white-space: nowrap; flex-shrink: 0;
+  }
+
+  /* サブヘッダー（月タブ） */
+  .subheader { flex-wrap: wrap; padding: 6px 10px !important; gap: 4px !important; }
+  .month-tab { padding: 4px 8px !important; font-size: 11px !important; min-width: 32px; }
+
+  /* カード類 */
+  .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+  .kpi-card { padding: 12px !important; }
+  .kpi-card .kv { font-size: 18px !important; }
+  .kpi-card .kl { font-size: 9px !important; }
+
+  /* 詳細テーブル */
+  .detail-grid { grid-template-columns: 1fr !important; }
+  .pl-table { font-size: 12px !important; }
+  .pl-table td, .pl-table th { padding: 4px 8px !important; }
+
+  /* 編集フォーム */
+  .form-grid { grid-template-columns: 1fr !important; }
+  .card-p { padding: 12px !important; }
+
+  /* 店舗ランキング */
+  .rank-wrap { padding: 12px !important; }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr !important; }
+  .topbar { height: 44px; }
+  .sidebar { top: 44px; }
+  .app { height: calc(100vh - 44px); }
+}
 </style>
 </head>
 <body>
@@ -327,6 +403,7 @@ tr:hover .rate-dim { color:var(--muted); }
 
 <!-- TOPBAR -->
 <div class="topbar">
+  <button class="mobile-sidebar-btn" onclick="toggleMobileSidebar()" title="メニュー">☰</button>
   <div class="logo"><div class="logo-icon">PL</div>ダッシュボード</div>
   <div class="topbar-sep"></div>
   <div class="topbar-title" id="topTitle">マルチ店舗管理</div>
@@ -345,8 +422,20 @@ tr:hover .rate-dim { color:var(--muted); }
     <button class="btn btn-sm" style="background:#dc2626;color:#fff;border:none;padding:5px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif" onclick="exportPdf()">🖨️ PDF出力</button>
     <button class="btn btn-primary btn-sm" onclick="saveAndRefresh()">💾 保存・反映</button>
     <button id="pwaInstallBtn" class="btn btn-sm" style="background:#7c3aed;color:#fff;border:none;padding:5px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;gap:4px" onclick="installPWA()">📲 アプリ化</button>
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" title="その他">⋯</button>
   </div>
 </div>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="btn btn-ghost btn-sm" onclick="openCsvModal();closeMobileMenu()">📥 CSV</button>
+  <button class="btn btn-ghost btn-sm" onclick="importHelpAdj();closeMobileMenu()">📋 ヘルプ調整</button>
+  <button class="btn btn-ghost btn-sm" onclick="document.getElementById('pdfFileInput').click();closeMobileMenu()">📄 請求PDF</button>
+  <button class="btn btn-ghost btn-sm" onclick="exportCsv();closeMobileMenu()">📤 出力</button>
+  <button class="btn btn-ghost btn-sm" onclick="saveDataJson();closeMobileMenu()">💾 データ保存</button>
+  <button class="btn btn-ghost btn-sm" onclick="saveHtml();closeMobileMenu()">💾 HTML</button>
+  <button class="btn btn-ghost btn-sm" onclick="saveAndRefresh();closeMobileMenu()">💾 反映</button>
+  <button class="btn btn-ghost btn-sm" onclick="exportPdf();closeMobileMenu()" style="background:rgba(220,38,38,.3)">🖨️ PDF</button>
+</div>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileSidebar()"></div>
 
 <div class="app">
   <!-- SIDEBAR -->
@@ -3423,6 +3512,32 @@ window.addEventListener('beforeinstallprompt', e => {
   // インストールボタンを表示
   const btn = document.getElementById('pwaInstallBtn');
   if (btn) btn.style.display = 'inline-flex';
+});
+
+// ── モバイルUI制御 ──
+function toggleMobileSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  sb.classList.toggle('mobile-open');
+  ov.classList.toggle('show');
+  closeMobileMenu();
+}
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('show');
+}
+function closeMobileMenu() {
+  document.getElementById('mobileMenu').classList.remove('show');
+}
+// サイドバーの店舗クリック時にモバイルではサイドバーを自動で閉じる
+document.addEventListener('click', function(e) {
+  if (e.target.closest && e.target.closest('.sidebar-item')) {
+    const sb = document.querySelector('.sidebar');
+    const ov = document.getElementById('sidebarOverlay');
+    if (sb.classList.contains('mobile-open')) {
+      sb.classList.remove('mobile-open');
+      ov.classList.remove('show');
+    }
+  }
 });
 
 function installPWA() {
