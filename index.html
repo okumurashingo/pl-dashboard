@@ -1840,11 +1840,10 @@ function renderCfTab() {
     const color = v >= 0 ? '#2ab4b4' : '#dc2626';
     const act = m === month ? 'outline:2px solid #1b3a4b;' : '';
     const _bMob = window.innerWidth <= 768;
-    const bw = _bMob ? 'flex:1;min-width:24px' : 'width:28px';
-    return '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;' + (_bMob?'flex:1;min-width:0':'') + '" onclick="setMonth(\'' + m + '\')">'
-      + '<div style="font-size:' + (_bMob?'8':'9') + 'px;font-family:\'DM Mono\',monospace;color:' + (v>=0?'var(--teal)':'var(--red)') + ';white-space:nowrap">' + (Math.abs(v)>99999?fmtY(v):'') + '</div>'
-      + '<div style="' + bw + ';height:' + Math.max(h,3) + 'px;background:' + color + ';border-radius:3px;' + act + '"></div>'
-      + '<div style="font-size:' + (_bMob?'10':'9') + 'px;color:var(--muted);white-space:nowrap;' + (m===month?'font-weight:800;color:var(--teal)':'') + '">' + m.replace('月','') + '</div>'
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;flex:1;min-width:0" onclick="setMonth(\'' + m + '\')">'
+      + (_bMob ? '' : '<div style="font-size:9px;font-family:\'DM Mono\',monospace;color:' + (v>=0?'var(--teal)':'var(--red)') + ';white-space:nowrap">' + (Math.abs(v)>99999?fmtY(v):'') + '</div>')
+      + '<div style="width:100%;height:' + Math.max(h,3) + 'px;background:' + color + ';border-radius:3px;' + act + '"></div>'
+      + '<div style="font-size:' + (_bMob?'9':'9') + 'px;color:var(--muted);white-space:nowrap;' + (m===month?'font-weight:800;color:var(--teal)':'') + '">' + m.replace('月','') + '</div>'
       + '</div>';
   }).join('');
 
