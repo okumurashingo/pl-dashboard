@@ -3667,16 +3667,10 @@ function mobSelectStore(id) {
   render();
 }
 
-function mobOpenToolsSheet() {
-  mobCloseAllSheets();
-  document.getElementById('mobToolsSheet').classList.add('show');
-  document.getElementById('mobSheetOverlay').classList.add('show');
-}
-
 function mobCloseAllSheets() {
-  document.getElementById('mobStoreSheet').classList.remove('show');
-  document.getElementById('mobToolsSheet').classList.remove('show');
-  document.getElementById('mobSheetOverlay').classList.remove('show');
+  var el;
+  el = document.getElementById('mobStoreSheet'); if (el) el.classList.remove('show');
+  el = document.getElementById('mobSheetOverlay'); if (el) el.classList.remove('show');
 }
 
 function installPWA() {
