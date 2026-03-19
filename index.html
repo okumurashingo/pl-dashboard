@@ -361,7 +361,7 @@ tr:hover .rate-dim { color:var(--muted); }
   .kpi-small-value { font-size: 18px !important; }
 
   /* ── サブヘッダー: 店名＋月タブに余裕を持たせる ── */
-  .subheader { padding: 10px 12px !important; gap: 8px !important; flex-wrap: wrap !important; }
+  .subheader { padding: 10px 12px !important; gap: 8px !important; flex-wrap: wrap !important; position: sticky !important; top: 0 !important; z-index: 200 !important; }
   .entity-name { font-size: 15px !important; font-weight: 900 !important; }
   .entity-badge { padding: 3px 10px !important; }
   .month-tabs { width: 100% !important; margin-left: 0 !important; overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -1481,6 +1481,7 @@ function renderOverview() {
     .sort((a,b)=>(b._c?.profit||0)-(a._c?.profit||0));
   const maxAbsProfit = Math.max(...ranked.map(r=>Math.abs(r._c?.profit||0)),1);
 
+  const _mob = window.innerWidth <= 768;
   document.getElementById('mainContent').innerHTML = `
   <div style="display:flex;gap:6px;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:0">
     <button onclick="switchOverviewTab('pl')" style="padding:8px 20px;border:none;border-bottom:3px solid var(--teal);background:none;color:var(--teal);font-weight:800;font-size:13px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-bottom:-2px">📊 PL</button>
@@ -1499,7 +1500,7 @@ function renderOverview() {
     </div>
   </div>
 
-  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px" class="anim anim-d1">
+  <div style="display:grid;grid-template-columns:${_mob?'1fr':'repeat(6,1fr)'};gap:${_mob?'8':'10'}px;margin-bottom:16px" class="anim anim-d1">
     <div class="kpi-small" style="border-left:4px solid var(--teal)">
       <div class="kpi-small-label">純売上高（${state.activeMonth}）</div>
       <div class="kpi-small-value" style="color:var(--teal);font-size:16px">${fmt(c.netRevenue)}<span style="font-size:10px;color:var(--muted)"> 円</span></div>
