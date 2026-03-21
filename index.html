@@ -481,21 +481,21 @@ tr:hover .rate-dim { color:var(--muted); }
   <div class="topbar-sep"></div>
   <div class="topbar-title" id="topTitle">マルチ店舗管理</div>
   <div class="topbar-right">
-    <button class="btn btn-ghost btn-sm" onclick="openCsvModal()" title="CSV インポート"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> CSV</button>
-    <button class="btn btn-ghost btn-sm" onclick="importHelpAdj()" title="労働時間調整値ツールからコピーしたデータを貼り付け" style="background:rgba(42,180,180,.25);border-color:rgba(42,180,180,.5)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg> ヘルプ調整</button>
-    <button class="btn btn-ghost btn-sm" onclick="document.getElementById('pdfFileInput').click()" title="請求一覧PDFから仕入業者の金額を取込" style="background:rgba(234,88,12,.15);border-color:rgba(234,88,12,.4);color:#fff"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> PDF取込</button>
+    <button class="btn btn-ghost btn-sm" onclick="openCsvModal()" title="CSV インポート">${svgIcon('download',16,'#fff')} CSV</button>
+    <button class="btn btn-ghost btn-sm" onclick="importHelpAdj()" title="労働時間調整値ツールからコピーしたデータを貼り付け" style="background:rgba(42,180,180,.25);border-color:rgba(42,180,180,.5)">${svgIcon('clipboard',16,'#fff')} ヘルプ調整</button>
+    <button class="btn btn-ghost btn-sm" onclick="document.getElementById('pdfFileInput').click()" title="請求一覧PDFから仕入業者の金額を取込" style="background:rgba(234,88,12,.15);border-color:rgba(234,88,12,.4);color:#fff">${svgIcon('document',16,'#fff')} PDF取込</button>
     <input type="file" id="pdfFileInput" accept=".pdf" style="display:none" onchange="importInvoicePdf(this.files[0]);this.value=''">
-    <button class="btn btn-ghost btn-sm" onclick="openBudgetCsvModal()" title="予算進捗CSVから売上予算・客数予算・前年データを取込" style="background:rgba(124,58,237,.15);border-color:rgba(124,58,237,.4);color:#fff"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg> 予算CSV</button>
+    <button class="btn btn-ghost btn-sm" onclick="openBudgetCsvModal()" title="予算進捗CSVから売上予算・客数予算・前年データを取込" style="background:rgba(124,58,237,.15);border-color:rgba(124,58,237,.4);color:#fff">${svgIcon('chart',16,'#fff')} 予算CSV</button>
     <div class="topbar-sep"></div>
-    <button class="btn btn-ghost btn-sm" onclick="saveHtml()" title="データ込みのHTMLファイルを保存"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> HTML</button>
-    <button class="btn btn-sm" style="background:#dc2626;color:#fff;border:none;padding:5px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif" onclick="exportPdf()" title="PDF出力"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> PDF</button>
-    <button class="btn btn-primary btn-sm" onclick="saveAndRefresh()" title="保存・反映"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Save</button>
+    <button class="btn btn-ghost btn-sm" onclick="saveHtml()" title="データ込みのHTMLファイルを保存">${svgIcon('save',16,'#fff')} HTML</button>
+    <button class="btn btn-sm" style="background:#dc2626;color:#fff;border:none;padding:5px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif" onclick="exportPdf()" title="PDF出力">${svgIcon('printer',16,'#fff')} PDF</button>
+    <button class="btn btn-primary btn-sm" onclick="saveAndRefresh()" title="保存・反映">${svgIcon('save',16,'#fff')} Save</button>
   </div>
 </div>
 <!-- モバイル: ボトムナビバー -->
 <div class="mob-bottombar">
   <button class="mob-nav-item" onclick="mobOpenStoreSheet()" style="flex:1">
-    <span class="mob-nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4M6 9c0 1 .89 3 6 3s6-2 6-3M6 9h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z"></path><line x1="10" y1="14" x2="10" y2="17"></line><line x1="14" y1="14" x2="14" y2="17"></line></svg></span>店舗を切り替える
+    <span class="mob-nav-icon">${svgIcon('store',20,'#fff')}</span>店舗を切り替える
   </button>
 </div>
 
@@ -515,175 +515,175 @@ tr:hover .rate-dim { color:var(--muted); }
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar" data-built="1"><div class="sidebar-section">
     <div class="sidebar-label">サマリー</div>
-    <div class="sidebar-item active" onclick="setActive('overview')">
+    <div class="sidebar-item " onclick="setActive('overview')">
       <div class="sidebar-dot"></div>全体集計
     </div>
   </div><div class="sidebar-section"><div class="sidebar-label">ラーメン部門 (19)</div><div class="sidebar-item " onclick="setActive('e_1772698368641_mt3')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">神虎肥後橋</span>
-        <span class="sidebar-badge pos">¥84万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772698368641_mt3')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772698368641_mt3')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699092788_e9p')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">神虎南森町</span>
-        <span class="sidebar-badge pos">¥28万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699092788_e9p')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699092788_e9p')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699117604_a68')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">神虎駅ビル</span>
-        <span class="sidebar-badge pos">¥143万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699117604_a68')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699117604_a68')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699150021_3x2')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">座銀本店</span>
-        <span class="sidebar-badge pos">¥124万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699150021_3x2')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699150021_3x2')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699159953_kza')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">座銀にぼし</span>
-        <span class="sidebar-badge pos">¥100万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699159953_kza')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699159953_kza')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699170104_x0c')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">座銀住之江</span>
-        <span class="sidebar-badge pos">¥202万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699170104_x0c')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699170104_x0c')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699204587_voy')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">◯de▽新大阪</span>
-        <span class="sidebar-badge pos">¥87万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699204587_voy')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699204587_voy')">複製</button>
-      </div><div class="sidebar-item " onclick="setActive('e_1772699220932_iz0')">
+      </div><div class="sidebar-item active" onclick="setActive('e_1772699220932_iz0')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">座銀神戸本店</span>
-        <span class="sidebar-badge pos">¥33万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699220932_iz0')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699220932_iz0')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699269378_krs')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">フラン軒</span>
-        <span class="sidebar-badge pos">¥46万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699269378_krs')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699269378_krs')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699283155_8i1')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">座銀くずは</span>
-        <span class="sidebar-badge pos">¥47万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699283155_8i1')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699283155_8i1')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699422004_3ea')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">座銀高槻</span>
-        <span class="sidebar-badge pos">¥44万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699422004_3ea')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699422004_3ea')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699447749_ifk')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">NEXT⬜︎</span>
-        <span class="sidebar-badge pos">¥61万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699447749_ifk')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699447749_ifk')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699469786_pi6')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">座銀池田</span>
-        <span class="sidebar-badge pos">¥89万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699469786_pi6')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699469786_pi6')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699481769_x2r')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ニューオルド</span>
-        <span class="sidebar-badge pos">¥46万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699481769_x2r')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699481769_x2r')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699497103_nm3')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">座銀寝屋川</span>
-        <span class="sidebar-badge pos">¥31万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699497103_nm3')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699497103_nm3')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699545603_td3')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">◯de▽三ノ宮</span>
-        <span class="sidebar-badge neg">-¥25万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699545603_td3')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699545603_td3')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699628653_bud')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">座銀塚口</span>
-        <span class="sidebar-badge pos">¥54万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699628653_bud')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699628653_bud')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699638903_x7d')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">座銀さんプラザ</span>
-        <span class="sidebar-badge pos">¥119万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699638903_x7d')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699638903_x7d')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699652220_cqz')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">座銀Diversity</span>
-        <span class="sidebar-badge neg">-¥32万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699652220_cqz')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699652220_cqz')">複製</button>
       </div><button class="sidebar-add" onclick="openAddModal('ramen')">＋ 店舗追加</button></div><div class="sidebar-section"><div class="sidebar-label">居酒屋部門 (2)</div><div class="sidebar-item " onclick="setActive('e_1772698368641_3cp')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">満ち汐のロマンス</span>
-        <span class="sidebar-badge pos">¥131万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772698368641_3cp')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772698368641_3cp')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772704566561_rzf')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">食堂ニト</span>
-        <span class="sidebar-badge pos">¥138万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772704566561_rzf')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772704566561_rzf')">複製</button>
-      </div><button class="sidebar-add" onclick="openAddModal('izakaya')">＋ 店舗追加</button></div><div class="sidebar-section"><div class="sidebar-label">本部 (7)</div><div class="sidebar-item " onclick="setActive('e_1772698368641_pks')">
+      </div><button class="sidebar-add" onclick="openAddModal('izakaya')">＋ 店舗追加</button></div><div class="sidebar-section"><div class="sidebar-label">🏢 本部 (7)</div><div class="sidebar-item " onclick="setActive('e_1772698368641_pks')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">管理部門</span>
-        <span class="sidebar-badge neg">-¥103万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772698368641_pks')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772698368641_pks')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699796786_6h8')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">人事・組織開発</span>
-        <span class="sidebar-badge neg">-¥106万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699796786_6h8')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699796786_6h8')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699827425_enm')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">クリエイティブ</span>
-        <span class="sidebar-badge neg">-¥69万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699827425_enm')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699827425_enm')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699856309_g1d')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">営業推進</span>
-        <span class="sidebar-badge neg">-¥80万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699856309_g1d')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699856309_g1d')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699870935_vnl')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">経営企画</span>
-        <span class="sidebar-badge neg">-¥269万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699870935_vnl')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699870935_vnl')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699929669_283')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">セントラルキッチン</span>
-        <span class="sidebar-badge neg">-¥734万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699929669_283')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699929669_283')">複製</button>
       </div><div class="sidebar-item " onclick="setActive('e_1772699949853_gra')">
         <div class="sidebar-dot"></div>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">フランチャイズ</span>
-        <span class="sidebar-badge pos">¥266万</span>
+        
         <button class="sidebar-delete" onclick="event.stopPropagation();deleteEntity('e_1772699949853_gra')">削除</button>
         <button class="sidebar-copy" onclick="event.stopPropagation();openCopyModal('e_1772699949853_gra')">複製</button>
       </div><button class="sidebar-add" onclick="openAddModal('hq')">＋ 部門追加</button></div></div>
@@ -691,316 +691,128 @@ tr:hover .rate-dim { color:var(--muted); }
   <!-- MAIN -->
   <div class="main">
     <div class="subheader">
-      <div class="entity-name" id="entityName">全体集計</div>
-      <div class="entity-badge" id="entityBadge">全体集計</div>
-      <div class="month-tabs" id="monthTabs"><button class="month-tab " onclick="setMonth('10月')">10月</button><button class="month-tab " onclick="setMonth('11月')">11月</button><button class="month-tab " onclick="setMonth('12月')">12月</button><button class="month-tab " onclick="setMonth('1月')">1月</button><button class="month-tab active" onclick="setMonth('2月')">2月</button><button class="month-tab " onclick="setMonth('3月')">3月</button><button class="month-tab " onclick="setMonth('4月')">4月</button><button class="month-tab " onclick="setMonth('5月')">5月</button><button class="month-tab " onclick="setMonth('6月')">6月</button><button class="month-tab " onclick="setMonth('7月')">7月</button><button class="month-tab " onclick="setMonth('8月')">8月</button><button class="month-tab " onclick="setMonth('9月')">9月</button></div>
-      <div class="edit-toggle" id="editToggleWrap"></div>
+      <div class="entity-name" id="entityName">座銀神戸本店</div>
+      <div class="entity-badge" id="entityBadge">店舗</div>
+      <div class="month-tabs" id="monthTabs"><button class="month-tab active" onclick="setMonth('10月')">10月</button><button class="month-tab " onclick="setMonth('11月')">11月</button><button class="month-tab " onclick="setMonth('12月')">12月</button><button class="month-tab " onclick="setMonth('1月')">1月</button><button class="month-tab " onclick="setMonth('2月')">2月</button><button class="month-tab " onclick="setMonth('3月')">3月</button><button class="month-tab " onclick="setMonth('4月')">4月</button><button class="month-tab " onclick="setMonth('5月')">5月</button><button class="month-tab " onclick="setMonth('6月')">6月</button><button class="month-tab " onclick="setMonth('7月')">7月</button><button class="month-tab " onclick="setMonth('8月')">8月</button><button class="month-tab " onclick="setMonth('9月')">9月</button></div>
+      <div class="edit-toggle" id="editToggleWrap"><button class="btn btn-sm btn-primary" onclick="toggleEdit()">
+          編集モード
+        </button></div>
     </div>
-    <div class="content" id="mainContent">
-  <div style="display:flex;gap:6px;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:0">
-    <button onclick="switchOverviewTab('pl')" style="padding:8px 20px;border:none;border-bottom:3px solid var(--teal);background:none;color:var(--teal);font-weight:800;font-size:13px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-bottom:-2px">PL</button>
-    <button onclick="switchOverviewTab('cf')" style="padding:8px 20px;border:none;border-bottom:3px solid transparent;background:none;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;font-family:'Noto Sans JP',sans-serif">CF</button>
-  </div>
-  <div class="kpi-row anim">
-    <div class="kpi-big">
-      <div class="kpi-big-label">年間総売上</div>
-      <div class="kpi-big-value" style="color:var(--teal)">¥871,041,203</div>
-      <div class="kpi-big-sub">全店舗合計</div>
+    <div class="content" id="mainContent"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px" class="anim">
+    <div class="kpi-small" style="border-left:4px solid var(--teal);background:var(--teal-pale)">
+      <div class="kpi-small-label">純売上高</div>
+      <div class="kpi-small-value" style="color:var(--teal);font-size:17px">0</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:3px">
+        <span></span>
+        <span style="font-size:11px;font-weight:700;color:var(--red)">▼100.00%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">前年: 574,698</div>
     </div>
-    <div class="kpi-big">
-      <div class="kpi-big-label">年間総利益</div>
-      <div class="kpi-big-value green">¥327,594,677</div>
-      <div class="kpi-big-sub">全店舗合計</div>
+    <div class="kpi-small" style="border-left:4px solid var(--sky);background:var(--sky-pale)">
+      <div class="kpi-small-label">粗利益</div>
+      <div class="kpi-small-value" style="color:var(--sky);font-size:17px">54,710</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:3px">
+        <span style="color:var(--sky);font-size:11px">5471000.00%</span>
+        <span style="font-size:11px;font-weight:700;color:var(--red)">▼71.15%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">前年: 189,650</div>
     </div>
-  </div>
-
-  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px" class="anim anim-d1">
-    <div class="kpi-small" style="border:1px solid #e5e7eb;border-radius:12px">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-        <div style="width:8px;height:8px;border-radius:50%;background:var(--teal)"></div>
-        <div class="kpi-small-label" style="margin-bottom:0">純売上高（2月）</div>
+    <div class="kpi-small" style="border-left:4px solid var(--orange);background:var(--orange-pale)">
+      <div class="kpi-small-label">人件費</div>
+      <div class="kpi-small-value" style="color:var(--orange);font-size:17px">0</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:3px">
+        <span style="color:var(--orange);font-size:11px">0.00%</span>
+        <span style="font-size:11px;font-weight:700;color:var(--red)">▼100.00%</span>
       </div>
-      <div class="kpi-small-value" style="color:var(--teal);font-size:17px">144,363,287<span style="font-size:10px;color:var(--muted)"> 円</span></div>
-      <div class="kpi-small-rate" style="color:var(--teal)">粗利率 64.23%</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">前年: 339,072</div>
     </div>
-    <div class="kpi-small" style="border:1px solid #e5e7eb;border-radius:12px">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-        <div style="width:8px;height:8px;border-radius:50%;background:var(--sky)"></div>
-        <div class="kpi-small-label" style="margin-bottom:0">粗利益（2月）</div>
+    <div class="kpi-small" style="border-left:4px solid var(--green);background:var(--green-pale)">
+      <div class="kpi-small-label">利益</div>
+      <div class="kpi-small-value" style="color:var(--green);font-size:17px">29,710</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:3px">
+        <span style="color:var(--green);font-size:11px">2971000.00%</span>
+        <span style="font-size:11px;font-weight:700;color:var(--green)">▲111.24%</span>
       </div>
-      <div class="kpi-small-value" style="color:var(--sky);font-size:17px">92,728,088<span style="font-size:10px;color:var(--muted)"> 円</span></div>
-      <div class="kpi-small-rate" style="color:var(--sky)">64.23%</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">前年: ▲264,362</div>
+    </div></div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:14px" class="anim anim-d1">
+    <div class="kpi-small" style="border-left:4px solid var(--purple);background:#f5f3ff">
+      <div class="kpi-small-label">客数</div>
+      <div class="kpi-small-value" style="color:var(--purple);font-size:17px">0</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:3px">
+        <span style="color:var(--purple);font-size:11px">当月客数</span>
+        <span style="font-size:11px;font-weight:700;color:var(--red)">▼100.00%</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">前年: 212</div>
     </div>
-    <div class="kpi-small" style="border:1px solid #e5e7eb;border-radius:12px">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-        <div style="width:8px;height:8px;border-radius:50%;background:var(--orange)"></div>
-        <div class="kpi-small-label" style="margin-bottom:0">人件費（2月）</div>
+    <div class="kpi-small" style="border-left:4px solid var(--pink);background:#fdf2f8">
+      <div class="kpi-small-label">客単価</div>
+      <div class="kpi-small-value" style="color:var(--pink);font-size:17px">0</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:3px">
+        <span style="color:var(--pink);font-size:11px">売上÷客数</span>
+        <span style="font-size:11px;font-weight:700;color:var(--red)">▼100.00%</span>
       </div>
-      <div class="kpi-small-value" style="color:var(--orange);font-size:17px">52,210,208<span style="font-size:10px;color:var(--muted)"> 円</span></div>
-      <div class="kpi-small-rate" style="color:var(--orange)">売上比 36.17%</div>
-    </div>
-    <div class="kpi-small" style="border:1px solid #e5e7eb;border-radius:12px">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-        <div style="width:8px;height:8px;border-radius:50%;background:var(--green)"></div>
-        <div class="kpi-small-label" style="margin-bottom:0">利益（2月）</div>
-      </div>
-      <div class="kpi-small-value" style="color:var(--green);font-size:17px">4,583,190<span style="font-size:10px;color:var(--muted)"> 円</span></div>
-      <div class="kpi-small-rate pos">利益率 3.17%</div>
-    </div>
-    <div class="kpi-small" style="border:1px solid #e5e7eb;border-radius:12px">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-        <div style="width:8px;height:8px;border-radius:50%;background:var(--purple)"></div>
-        <div class="kpi-small-label" style="margin-bottom:0">客数（2月）</div>
-      </div>
-      <div class="kpi-small-value" style="color:var(--purple);font-size:17px">116,273<span style="font-size:10px;color:var(--muted)"> 人</span></div>
-      <div class="kpi-small-rate" style="color:var(--purple)">全店舗合計</div>
-    </div>
-    <div class="kpi-small" style="border:1px solid #e5e7eb;border-radius:12px">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-        <div style="width:8px;height:8px;border-radius:50%;background:var(--pink)"></div>
-        <div class="kpi-small-label" style="margin-bottom:0">客単価（2月）</div>
-      </div>
-      <div class="kpi-small-value" style="color:var(--pink);font-size:17px">1,380<span style="font-size:10px;color:var(--muted)"> 円</span></div>
-      <div class="kpi-small-rate" style="color:var(--pink)">売上 ÷ 客数</div>
-    </div>
-  </div>
-
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-    <div class="card" style="border-radius:12px;border:1px solid #e5e7eb;padding:20px;animation:fadeIn .6s ease .3s both">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-        <div style="font-size:14px;font-weight:800;color:var(--text)">累計売上 VS 期間目標</div>
-      </div>
-      <div style="font-family:'DM Mono',monospace;font-size:28px;font-weight:700;color:var(--teal);margin-bottom:4px">871,041,203 円</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px">目標 621,865,000 円 / 達成率 140.1%</div>
-      <div style="height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden"><div style="height:100%;background:var(--teal);border-radius:4px;width:100%;transition:width .5s"></div></div>
-    </div>
-    <div class="card" style="border-radius:12px;border:1px solid #e5e7eb;padding:20px;animation:fadeIn .6s ease .4s both">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-        <div style="font-size:14px;font-weight:800;color:var(--text)">累計利益 VS 期間目標</div>
-      </div>
-      <div style="font-family:'DM Mono',monospace;font-size:28px;font-weight:700;color:var(--green);margin-bottom:4px">327,594,677 円</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px">利益予算データなし</div>
-      <div style="height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden"><div style="height:100%;background:var(--green);border-radius:4px;width:0%;transition:width .5s"></div></div>
-    </div>
-  </div>
-
-  <div class="chart-grid-2 anim anim-d2">
-    <div class="card card-p" style="grid-column:span 2">
-      <div class="card-title">店舗別 2月 利益額ランキング</div>
-      <div class="card-sub">全店舗を利益額で比較。マイナスの店舗は赤色で表示されます。</div>
-      <div id="hbarChart"><div class="hbar-item" onclick="setActive('e_1772699949853_gra')">
-      <div class="hbar-label" title="フランチャイズ">フランチャイズ</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'フランチャイズ: 2,657,200円 / 利益率84.36%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:36.205196205948326%;background:#2ab4b4">
-          <span class="hbar-val">2,657,200</span>
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699170104_x0c')">
-      <div class="hbar-label" title="座銀住之江">座銀住之江</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'座銀住之江: 2,023,097円 / 利益率20.24%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:27.565340895930092%;background:#2ab4b4">
-          <span class="hbar-val">2,023,097</span>
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699117604_a68')">
-      <div class="hbar-label" title="神虎駅ビル">神虎駅ビル</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'神虎駅ビル: 1,427,267円 / 利益率11.60%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:19.446967399245537%;background:#2ab4b4">
-          <span class="hbar-val">1,427,267</span>
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772704566561_rzf')">
-      <div class="hbar-label" title="食堂ニト">食堂ニト</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'食堂ニト: 1,381,858円 / 利益率32.71%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:18.828255313397314%;background:#2ab4b4">
-          <span class="hbar-val">1,381,858</span>
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772698368641_3cp')">
-      <div class="hbar-label" title="満ち汐のロマンス">満ち汐のロマンス</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'満ち汐のロマンス: 1,310,867円 / 利益率37.94%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:17.86098033076278%;background:#2ab4b4">
-          <span class="hbar-val">1,310,867</span>
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699150021_3x2')">
-      <div class="hbar-label" title="座銀本店">座銀本店</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'座銀本店: 1,239,556円 / 利益率16.83%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:16.88934524622177%;background:#2ab4b4">
-          <span class="hbar-val">1,239,556</span>
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699638903_x7d')">
-      <div class="hbar-label" title="座銀さんプラザ">座銀さんプラザ</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'座銀さんプラザ: 1,187,935円 / 利益率15.36%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:16.185992682113962%;background:#2ab4b4">
-          <span class="hbar-val">1,187,935</span>
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699159953_kza')">
-      <div class="hbar-label" title="座銀にぼし">座銀にぼし</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'座銀にぼし: 1,000,963円 / 利益率13.71%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:13.638439639430471%;background:#2ab4b4">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699469786_pi6')">
-      <div class="hbar-label" title="座銀池田">座銀池田</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'座銀池田: 894,980円 / 利益率17.13%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:12.194387513322155%;background:#2ab4b4">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699204587_voy')">
-      <div class="hbar-label" title="◯de▽新大阪">◯de▽新大阪</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'◯de▽新大阪: 871,001円 / 利益率13.61%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:11.867666002023633%;background:#2ab4b4">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772698368641_mt3')">
-      <div class="hbar-label" title="神虎肥後橋">神虎肥後橋</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'神虎肥後橋: 841,143円 / 利益率10.20%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:11.460841243511965%;background:#2ab4b4">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699447749_ifk')">
-      <div class="hbar-label" title="NEXT⬜︎">NEXT⬜︎</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'NEXT⬜︎: 614,283円 / 利益率7.69%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:8.369801498185517%;background:#2ab4b4">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699628653_bud')">
-      <div class="hbar-label" title="座銀塚口">座銀塚口</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'座銀塚口: 539,562円 / 利益率8.62%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:7.351704077703556%;background:#2ab4b4">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699283155_8i1')">
-      <div class="hbar-label" title="座銀くずは">座銀くずは</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'座銀くずは: 468,606円 / 利益率7.68%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:6.384905981215046%;background:#2ab4b4">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699481769_x2r')">
-      <div class="hbar-label" title="ニューオルド">ニューオルド</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'ニューオルド: 463,383円 / 利益率11.83%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:6.313740942910188%;background:#2ab4b4">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699269378_krs')">
-      <div class="hbar-label" title="フラン軒">フラン軒</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'フラン軒: 459,593円 / 利益率7.77%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:6.2621009859552945%;background:#2ab4b4">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699422004_3ea')">
-      <div class="hbar-label" title="座銀高槻">座銀高槻</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'座銀高槻: 444,291円 / 利益率7.34%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:6.053606362914717%;background:#2ab4b4">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699220932_iz0')">
-      <div class="hbar-label" title="座銀神戸本店">座銀神戸本店</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'座銀神戸本店: 333,384円 / 利益率5.81%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:4.542463168720411%;background:#2ab4b4">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699497103_nm3')">
-      <div class="hbar-label" title="座銀寝屋川">座銀寝屋川</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'座銀寝屋川: 305,889円 / 利益率5.13%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:4.167835037724419%;background:#2ab4b4">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699092788_e9p')">
-      <div class="hbar-label" title="神虎南森町">神虎南森町</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'神虎南森町: 283,671円 / 利益率4.30%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:3.8651077122300044%;background:#2ab4b4">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699545603_td3')">
-      <div class="hbar-label" title="◯de▽三ノ宮">◯de▽三ノ宮</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'◯de▽三ノ宮: ▲245,500円 / 利益率-6.69%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:3.345015681379013%;background:#dc2626">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699652220_cqz')">
-      <div class="hbar-label" title="座銀Diversity">座銀Diversity</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'座銀Diversity: ▲316,282円 / 利益率-8.25%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:4.309442972455874%;background:#dc2626">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699827425_enm')">
-      <div class="hbar-label" title="クリエイティブ">クリエイティブ</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'クリエイティブ: ▲689,270円 / 利益率-68927000.00%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:9.391523253377239%;background:#dc2626">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699856309_g1d')">
-      <div class="hbar-label" title="営業推進">営業推進</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'営業推進: ▲798,999円 / 利益率-79899900.00%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:10.88661582242831%;background:#dc2626">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772698368641_pks')">
-      <div class="hbar-label" title="管理部門">管理部門</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'管理部門: ▲1,025,800円 / 利益率-299.94%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:13.97685167396575%;background:#dc2626">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699796786_6h8')">
-      <div class="hbar-label" title="人事・組織開発">人事・組織開発</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'人事・組織開発: ▲1,059,471円 / 利益率-105947100.00%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:14.435629771756842%;background:#dc2626">
-          
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699870935_vnl')">
-      <div class="hbar-label" title="経営企画">経営企画</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'経営企画: ▲2,690,739円 / 利益率-398.63%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:36.66217576170299%;background:#dc2626">
-          <span class="hbar-val">▲2,690,739</span>
-        </div>
-      </div>
-    </div><div class="hbar-item" onclick="setActive('e_1772699929669_283')">
-      <div class="hbar-label" title="セントラルキッチン">セントラルキッチン</div>
-      <div class="hbar-track" onmouseenter="showTT(event,'セントラルキッチン: ▲7,339,278円 / 利益率-124.45%')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:100%;background:#dc2626">
-          <span class="hbar-val">▲7,339,278</span>
-        </div>
-      </div>
-    </div></div>
-      <div class="hbar-axis" id="hbarAxis"><span>0.0M</span><span>1.8M</span><span>3.7M</span><span>5.5M</span><span>7.3M</span></div>
-      <div style="display:flex;align-items:center;gap:16px;margin-top:10px;">
-        <div style="display:flex;align-items:center;gap:5px"><div style="width:12px;height:12px;background:var(--teal);border-radius:2px"></div><span style="font-size:11px;color:var(--muted)">黒字</span></div>
-        <div style="display:flex;align-items:center;gap:5px"><div style="width:12px;height:12px;background:var(--red);border-radius:2px"></div><span style="font-size:11px;color:var(--muted)">赤字</span></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card anim anim-d3" style="overflow:hidden">
-    <div style="padding:16px 20px 8px">
-      <div class="card-title">全体 損益計算書（2月）</div>
-      <div class="card-sub">全店舗・全部門の勘定科目別合計</div>
-    </div>
-    <div id="overviewPlTable"><table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0"><thead><tr style="background:#1b3a4b"><th style="padding:6px 10px;color:#fff;font-size:10px;text-align:left">勘定科目</th><th style="padding:6px 10px;color:#fff;font-size:10px;text-align:right">2月（円）</th><th style="padding:6px 10px;color:#fff;font-size:10px;text-align:right">売上比</th></tr></thead><tbody><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:10px;font-size:11px;">売上</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">160,403,652</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">111.11%</td></tr><tr style="background:#e0f2fe;border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:10px;font-size:11px;font-weight:800;">純売上高</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;font-weight:800;">144,363,287</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">100.00%</td></tr><tr style="background:#f1f5f9"><td colspan="3" style="padding:4px 10px;font-size:9px;font-weight:800;letter-spacing:1px;color:#64748b">▶ 原価</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">丸善マテリアル</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">10,917,966</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">7.56%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">ギュウモ</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">9,483,694</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">6.57%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">エンド商事</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">6,080,089</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">4.21%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">Esperanza</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">5,956,918</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">4.13%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">ペルゴ</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">4,112,860</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">2.85%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">肉の和</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">4,064,652</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">2.82%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">柴商</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">3,211,417</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">2.22%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">堀茂食糧商事</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">2,178,543</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">1.51%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">太伸</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">1,431,630</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.99%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">福島鰹</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">1,237,400</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.86%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">丸越</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">1,211,400</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.84%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">ショクリュー</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">993,990</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.69%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">フードケアリ</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">832,920</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.58%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">瑞穂食品</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">746,800</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.52%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">オノウエ</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">332,590</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.23%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">肉の山形屋</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">143,785</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.10%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">桶谷</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">135,904</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.09%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">村上商事</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">129,425</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.09%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">アンキッキ</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">107,570</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.07%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">ジャパンフロントファーム</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">96,605</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.07%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">小口仕入</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">80,000</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.06%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">乾酒店</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">74,081</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.05%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">名畑</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">59,368</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.04%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">徳島屋</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">56,900</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.04%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">新風</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">45,600</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.03%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">エビス販売</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">45,000</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.03%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">上方ビール</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">39,360</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.03%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">モリヨシ</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">18,900</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.01%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">マルガー</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">13,010</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.01%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">アイン食品</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">12,710</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.01%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">SakeBase</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">7,170</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.00%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">EC購買</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">4,220</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.00%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:42px;font-size:11px;">山利</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">3,700</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.00%</td></tr><tr style="background:#fff7ed;border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:10px;font-size:11px;font-weight:800;">原価合計</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;font-weight:800;">51,635,199</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">35.77%</td></tr><tr style="background:#eff6ff;border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:10px;font-size:11px;font-weight:800;">粗利益</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;font-weight:800;">92,728,088</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">64.23%</td></tr><tr style="background:#f1f5f9"><td colspan="3" style="padding:4px 10px;font-size:9px;font-weight:800;letter-spacing:1px;color:#64748b">▶ 人件費</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">社員人件費</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">26,653,000</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">18.46%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">法定福利費</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">5,062,766</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">3.51%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">人件費（AP）</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">18,507,489</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">12.82%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">ヘルプ調整</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">1,618,800</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">1.12%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">タイミー</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">368,153</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.26%</td></tr><tr style="background:#fff7ed;border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:10px;font-size:11px;font-weight:800;">人件費合計</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;font-weight:800;">52,210,208</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">36.17%</td></tr><tr style="background:#f1f5f9"><td colspan="3" style="padding:4px 10px;font-size:9px;font-weight:800;letter-spacing:1px;color:#64748b">▶ 一般管理費</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">システム利用料</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">1,253,500</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.87%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">給料・労務計算</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">479,700</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.33%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">広告費</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">415,000</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.29%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">運賃</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">1,260,000</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.87%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">ロイヤリティ</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">300,000</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.21%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">消耗品</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">3,234,807</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">2.24%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">水光熱費</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">5,927,203</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">4.11%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">保険料</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">176,000</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.12%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">修繕費</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">555,000</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.38%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">減価償却</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">3,336,000</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">2.31%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">接待交際費</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">100,000</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.07%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">交通費</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">1,205,910</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.84%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">通信費</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">242,000</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.17%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">手数料</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">2,958,200</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">2.05%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">長期前払</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">54,000</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">0.04%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">家賃</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">10,210,140</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">7.07%</td></tr><tr style="border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:26px;font-size:11px;">雑費</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;">4,477,230</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">3.10%</td></tr><tr style="background:#f5f3ff;border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:10px;font-size:11px;font-weight:800;">一般管理費合計</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;font-weight:800;">36,184,690</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">25.07%</td></tr><tr style="background:#f0fdf4;border-bottom:1px solid #f0f0f0"><td style="padding:5px 10px;padding-left:10px;font-size:11px;font-weight:800;">当月利益</td><td style="padding:5px 10px;text-align:right;font-family:monospace;font-size:11px;font-weight:800;">4,583,190</td><td style="padding:5px 10px;text-align:right;font-size:10px;color:#64748b">3.17%</td></tr></tbody></table></div>
-  </div>
-</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">前年: 3,012</div>
+    </div></div><div class="chart-grid-2 anim anim-d1"><div class="card" style="overflow:hidden"><table class="pl-table"><thead><tr><th>勘定科目</th><th style="text-align:right">今月（円）</th><th style="text-align:right">比率</th></tr></thead><tbody><tr class=""><td>売上</td><td class="num ">0</td><td class="rate">—</td></tr><tr class="pl-tot"><td>純売上高</td><td class="num ">0</td><td class="rate">100.00%</td></tr><tr class="pl-sec"><td colspan="3">▶ 原価</td></tr><tr class="pl-ind"><td>期首棚卸</td><td class="num ">504,549</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>エンド商事</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>福島鰹</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>瑞穂食品</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>ギュウモ</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>肉の和</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>丸善マテリアル</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>柴商</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>ショクリュー</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>徳島屋</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>Esperanza</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>太伸</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>丸越</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>ペルゴ</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>フードケアリ</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>上方ビール</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>EC購買</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>小口仕入</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind2"><td>ミクリード</td><td class="num">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind"><td>期末棚卸</td><td class="num ">559,259</td><td class="rate rate-dim">—</td></tr><tr class="pl-tot"><td>原価合計</td><td class="num neg">▲54,710</td><td class="rate">-5471000.00%</td></tr><tr class="pl-tot"><td>粗利益</td><td class="num ">54,710</td><td class="rate">5471000.00%</td></tr><tr class="pl-sec"><td colspan="3">▶ 人件費</td></tr><tr class="pl-ind"><td>社員人件費</td><td class="num ">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind"><td>法定福利費</td><td class="num ">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-ind"><td>人件費（AP）</td><td class="num ">0</td><td class="rate rate-dim">—</td></tr><tr class="pl-tot"><td>人件費合計</td><td class="num ">0</td><td class="rate">0.00%</td></tr><tr class="pl-sec"><td colspan="3">▶ 経費</td></tr><tr class="pl-ind"><td>システム利用料</td><td class="num ">25,000</td><td class="rate rate-dim">—</td></tr><tr class="pl-tot"><td>一般管理費合計</td><td class="num ">25,000</td><td class="rate">2500000.00%</td></tr><tr class="pl-profit"><td>利益</td><td class="num ">29,710</td><td class="rate">2971000.00%</td></tr></tbody></table></div><div style="display:flex;flex-direction:column;gap:14px"><div class="card card-p"><div class="card-title">年間売上推移（10月〜9月）</div><div class="wf-wrap" style="align-items:flex-end"><div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'10月 純売上: 0円')" onmouseleave="hideTT()">
+      <div style="height:98px;width:100%"></div>
+      <div style="height:2px;background:#2ab4b4;border-radius:3px 3px 0 0;width:100%"></div>
+      <div style="font-size:9px;color:#2ab4b4;text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700"></div>
+      <span class="wf-l" style="font-size:9px;color:#2ab4b4;font-weight:800">10</span>
+    </div><div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'11月 純売上: 0円')" onmouseleave="hideTT()">
+      <div style="height:98px;width:100%"></div>
+      <div style="height:2px;background:#a5f3fc;border-radius:3px 3px 0 0;width:100%"></div>
+      <div style="font-size:9px;color:#a5f3fc;text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700"></div>
+      <span class="wf-l" style="font-size:9px;">11</span>
+    </div><div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'12月 純売上: 0円')" onmouseleave="hideTT()">
+      <div style="height:98px;width:100%"></div>
+      <div style="height:2px;background:#a5f3fc;border-radius:3px 3px 0 0;width:100%"></div>
+      <div style="font-size:9px;color:#a5f3fc;text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700"></div>
+      <span class="wf-l" style="font-size:9px;">12</span>
+    </div><div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'1月 純売上: 648,000円')" onmouseleave="hideTT()">
+      <div style="height:88.70733489966781px;width:100%"></div>
+      <div style="height:11.292665100332194px;background:#a5f3fc;border-radius:3px 3px 0 0;width:100%"></div>
+      <div style="font-size:9px;color:#a5f3fc;text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700">65万</div>
+      <span class="wf-l" style="font-size:9px;">1</span>
+    </div><div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'2月 純売上: 5,738,238円')" onmouseleave="hideTT()">
+      <div style="height:0px;width:100%"></div>
+      <div style="height:100px;background:#a5f3fc;border-radius:3px 3px 0 0;width:100%"></div>
+      <div style="font-size:9px;color:#a5f3fc;text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700">574万</div>
+      <span class="wf-l" style="font-size:9px;">2</span>
+    </div><div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'3月 純売上: 0円')" onmouseleave="hideTT()">
+      <div style="height:98px;width:100%"></div>
+      <div style="height:2px;background:#a5f3fc;border-radius:3px 3px 0 0;width:100%"></div>
+      <div style="font-size:9px;color:#a5f3fc;text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700"></div>
+      <span class="wf-l" style="font-size:9px;">3</span>
+    </div><div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'4月 純売上: 0円')" onmouseleave="hideTT()">
+      <div style="height:98px;width:100%"></div>
+      <div style="height:2px;background:#a5f3fc;border-radius:3px 3px 0 0;width:100%"></div>
+      <div style="font-size:9px;color:#a5f3fc;text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700"></div>
+      <span class="wf-l" style="font-size:9px;">4</span>
+    </div><div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'5月 純売上: 0円')" onmouseleave="hideTT()">
+      <div style="height:98px;width:100%"></div>
+      <div style="height:2px;background:#a5f3fc;border-radius:3px 3px 0 0;width:100%"></div>
+      <div style="font-size:9px;color:#a5f3fc;text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700"></div>
+      <span class="wf-l" style="font-size:9px;">5</span>
+    </div><div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'6月 純売上: 0円')" onmouseleave="hideTT()">
+      <div style="height:98px;width:100%"></div>
+      <div style="height:2px;background:#a5f3fc;border-radius:3px 3px 0 0;width:100%"></div>
+      <div style="font-size:9px;color:#a5f3fc;text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700"></div>
+      <span class="wf-l" style="font-size:9px;">6</span>
+    </div><div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'7月 純売上: 0円')" onmouseleave="hideTT()">
+      <div style="height:98px;width:100%"></div>
+      <div style="height:2px;background:#a5f3fc;border-radius:3px 3px 0 0;width:100%"></div>
+      <div style="font-size:9px;color:#a5f3fc;text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700"></div>
+      <span class="wf-l" style="font-size:9px;">7</span>
+    </div><div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'8月 純売上: 0円')" onmouseleave="hideTT()">
+      <div style="height:98px;width:100%"></div>
+      <div style="height:2px;background:#a5f3fc;border-radius:3px 3px 0 0;width:100%"></div>
+      <div style="font-size:9px;color:#a5f3fc;text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700"></div>
+      <span class="wf-l" style="font-size:9px;">8</span>
+    </div><div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'9月 純売上: 0円')" onmouseleave="hideTT()">
+      <div style="height:98px;width:100%"></div>
+      <div style="height:2px;background:#a5f3fc;border-radius:3px 3px 0 0;width:100%"></div>
+      <div style="font-size:9px;color:#a5f3fc;text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700"></div>
+      <span class="wf-l" style="font-size:9px;">9</span>
+    </div></div></div><div class="card card-p"><div class="card-title">費用内訳（上位）</div></div></div></div></div>
   </div>
 </div>
 
@@ -1024,7 +836,7 @@ tr:hover .rate-dim { color:var(--muted); }
 
     <!-- コピー元情報 -->
     <div style="background:var(--teal-pale);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;display:flex;align-items:center;gap:8px">
-      <span style="font-size:16px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4M6 9c0 1 .89 3 6 3s6-2 6-3M6 9h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z"></path><line x1="10" y1="14" x2="10" y2="17"></line><line x1="14" y1="14" x2="14" y2="17"></line></svg></span>
+      <span style="font-size:16px">${svgIcon('store',24,'#2563eb')}</span>
       <div>
         <div style="font-weight:700;color:var(--teal-dark)" id="copySourceName">セントラルキッチン</div>
         <div style="color:var(--muted);font-size:11px">この店舗データをコピーします</div>
@@ -1156,7 +968,7 @@ tr:hover .rate-dim { color:var(--muted); }
       <label style="font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap">対象月：</label>
       <select id="budgetCsvMonth" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Noto Sans JP',sans-serif;flex:1">
         <option value="1月">1月</option>
-        <option value="2月" selected="">2月</option>
+        <option value="2月" selected>2月</option>
         <option value="3月">3月</option>
         <option value="4月">4月</option>
         <option value="5月">5月</option>
@@ -1174,27 +986,27 @@ tr:hover .rate-dim { color:var(--muted); }
       <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:6px">取込内容</label>
       <div style="display:flex;flex-direction:column;gap:6px;background:var(--bg);padding:10px;border-radius:6px">
         <label style="display:flex;align-items:center;gap:6px;font-size:11px">
-          <input type="checkbox" id="budgetCsv_budgetRevenue" checked="">
+          <input type="checkbox" id="budgetCsv_budgetRevenue" checked>
           <span>売上予算 (累計売上予算)</span>
         </label>
         <label style="display:flex;align-items:center;gap:6px;font-size:11px">
-          <input type="checkbox" id="budgetCsv_budgetCustomerCount" checked="">
+          <input type="checkbox" id="budgetCsv_budgetCustomerCount" checked>
           <span>客数予算 (累計客数予算)</span>
         </label>
         <label style="display:flex;align-items:center;gap:6px;font-size:11px">
-          <input type="checkbox" id="budgetCsv_prevRevenue" checked="">
+          <input type="checkbox" id="budgetCsv_prevRevenue" checked>
           <span>前年売上 (累計売上前年実績)</span>
         </label>
         <label style="display:flex;align-items:center;gap:6px;font-size:11px">
-          <input type="checkbox" id="budgetCsv_prevCustomerCount" checked="">
+          <input type="checkbox" id="budgetCsv_prevCustomerCount" checked>
           <span>前年客数 (累計客数前年実績)</span>
         </label>
         <label style="display:flex;align-items:center;gap:6px;font-size:11px">
-          <input type="checkbox" id="budgetCsv_actualRevenue" checked="">
+          <input type="checkbox" id="budgetCsv_actualRevenue" checked>
           <span>売上実績 (累計売上実績 → 税込変換)</span>
         </label>
         <label style="display:flex;align-items:center;gap:6px;font-size:11px">
-          <input type="checkbox" id="budgetCsv_actualCustomerCount" checked="">
+          <input type="checkbox" id="budgetCsv_actualCustomerCount" checked>
           <span>客数実績 (累計客数実績)</span>
         </label>
       </div>
@@ -1209,125 +1021,20 @@ tr:hover .rate-dim { color:var(--muted); }
     <input type="file" id="budgetCsvFileInput" accept=".csv,.xls,.xlsx" style="display:none" onchange="handleBudgetCsvFile(this.files[0])">
 
     <!-- プレビュー -->
-    <div id="budgetCsvPreview" style="display: block; margin-top: 12px;">
-      <div id="budgetCsvPreviewTitle" style="font-size:11px;font-weight:700;margin-bottom:6px">マッチ: 21件 / 23件中</div>
-      <div id="budgetCsvPreviewList" style="border:1px solid var(--border);border-radius:7px;max-height:200px;overflow-y:auto;font-size:11px">
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>肥後橋店 → <b>神虎肥後橋</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:10,120,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>南森町店 → <b>神虎南森町</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:7,740,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>大阪駅前ビル店 → <b>神虎駅ビル</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:12,960,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>本店 → <b>座銀本店</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:8,900,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>にぼし店 → <b>座銀にぼし</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:8,720,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>住之江店 → <b>座銀住之江</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:10,560,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>〇de▽新大阪店 → <b>◯de▽新大阪</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:7,360,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>神戸本店 → <b>座銀神戸本店</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:6,840,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>フラン軒 → <b>フラン軒</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:6,700,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>くずはモール店 → <b>座銀くずは</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:7,890,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>高槻店 → <b>座銀高槻</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:6,720,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>NEXTシカク → <b>NEXT⬜︎</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:10,180,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>池田店 → <b>座銀池田</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:5,960,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>メンヤ ニューオルド → <b>ニューオルド</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:4,560,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>寝屋川店 → <b>座銀寝屋川</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:6,080,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>〇de▽三ノ宮店 → <b>◯de▽三ノ宮</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:4,780,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>塚口店 → <b>座銀塚口</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:7,040,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>さんプラザ店 → <b>座銀さんプラザ</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:8,720,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>ダイバーシティ店 → <b>座銀Diversity</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:6,110,000</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>満ち汐のロマンス → <b>満ち汐のロマンス</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:0</span>
-    </div>
-  
-    <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
-      <span>食堂二十 → <b>食堂ニト</b></span>
-      <span style="font-size:10px;color:var(--muted)">売上予:0</span>
-    </div>
-  </div>
+    <div id="budgetCsvPreview" style="display:none;margin-top:12px">
+      <div id="budgetCsvPreviewTitle" style="font-size:11px;font-weight:700;margin-bottom:6px"></div>
+      <div id="budgetCsvPreviewList" style="border:1px solid var(--border);border-radius:7px;max-height:200px;overflow-y:auto;font-size:11px"></div>
     </div>
 
     <div class="modal-btns" style="margin-top:14px">
       <button class="btn" onclick="closeBudgetCsvModal()">キャンセル</button>
-      <button class="btn btn-primary" id="budgetCsvExecBtn" onclick="execBudgetCsvImport()" style="opacity: 1;">反映する</button>
+      <button class="btn btn-primary" id="budgetCsvExecBtn" onclick="execBudgetCsvImport()" disabled style="opacity:.5">反映する</button>
     </div>
   </div>
 </div>
 
 <div class="tooltip" id="tooltip" style="top: 458px; left: 1156px;">4月 純売上: 0円</div>
-<div class="notif" id="notif">反映しました</div>
+<div class="notif" id="notif">保存・反映しました！</div>
 
 <script>
 // ══════════════════════════════════════
@@ -2466,7 +2173,22 @@ function renderDetail(entity) {
     const rateCls = opts.ind||opts.ind2 ? 'rate rate-dim' : 'rate';
     const rateStr = ratio!=null ? fmtR(ratio) : '—';
 
-    return `<tr class="${cls}"><td>${label}</td><td class="num ${vc}">${fmt(val)}</td><td class="${rateCls}">${rateStr}</td></tr>`;
+    // 予算比較バッジ（budgetVal がある行のみ）
+    let budgetBadge = '';
+    if(opts.budgetVal && opts.budgetVal > 0){
+      const bRatio = (val/opts.budgetVal*100).toFixed(1);
+      const isExp = opts.isExpense;
+      if(isExp && val > opts.budgetVal){
+        const over = val - opts.budgetVal;
+        budgetBadge = `<div style="font-size:9px;margin-top:2px"><span style="background:#fee2e2;color:var(--red);padding:1px 4px;border-radius:3px;font-weight:700">超過${bRatio}% +${fmt(over)}</span></div>`;
+      } else if(isExp){
+        budgetBadge = `<div style="font-size:9px;margin-top:2px"><span style="background:#dcfce7;color:#16a34a;padding:1px 4px;border-radius:3px">予算内${bRatio}%</span></div>`;
+      } else {
+        budgetBadge = `<div style="font-size:9px;margin-top:2px;color:var(--muted)">予算${fmt(opts.budgetVal)} / ${bRatio}%</div>`;
+      }
+    }
+
+    return `<tr class="${cls}"><td>${label}${budgetBadge}</td><td class="num ${vc}">${fmt(val)}</td><td class="${rateCls}">${rateStr}</td></tr>`;
   };
 
   let plRows='';
@@ -2476,14 +2198,14 @@ function renderDetail(entity) {
   plRows+=R('期首棚卸',c.invOpen,{ind:true});
   (c.vendors||[]).forEach(v=>plRows+=`<tr class="pl-ind2"><td>${aliasVendor(v.name)||'—'}</td><td class="num">${fmt(v.amount)}</td><td class="rate rate-dim">${fmtR(pct(v.amount))}</td></tr>`);
   plRows+=R('期末棚卸',c.invClose,{ind:true});
-  plRows+=R('原価合計',c.cogs,{tot:true,rate:c.cogs/nr*100,budgetVal:bd?.cogs});
+  plRows+=R('原価合計',c.cogs,{tot:true,rate:c.cogs/nr*100,budgetVal:bd?.cogs,isExpense:true});
   plRows+=R('粗利益',c.grossProfit,{tot:true,rate:c.grossRate,budgetVal:bd?.grossProfit});
   plRows+=`<tr class="pl-sec"><td colspan="3">▶ 人件費</td></tr>`;
-  plRows+=R('社員人件費',c.laborStaff,{ind:true,budgetVal:bd?.laborStaff}); plRows+=R('法定福利費',c.laborWelfare,{ind:true,budgetVal:bd?.laborWelfare});
-  plRows+=R('人件費（AP）',c.laborAP,{ind:true,budgetVal:bd?.laborAP});
+  plRows+=R('社員人件費',c.laborStaff,{ind:true,budgetVal:bd?.laborStaff,isExpense:true}); plRows+=R('法定福利費',c.laborWelfare,{ind:true,budgetVal:bd?.laborWelfare,isExpense:true});
+  plRows+=R('人件費（AP）',c.laborAP,{ind:true,budgetVal:bd?.laborAP,isExpense:true});
   if(c.helpAdj)plRows+=R('ヘルプ調整',c.helpAdj,{ind:true});
   if(c.timee)plRows+=R('タイミー',c.timee,{ind:true});
-  plRows+=R('人件費合計',c.laborTotal,{tot:true,rate:c.laborRate,budgetVal:bd?.laborTotal});
+  plRows+=R('人件費合計',c.laborTotal,{tot:true,rate:c.laborRate,budgetVal:bd?.laborTotal,isExpense:true});
   plRows+=`<tr class="pl-sec"><td colspan="3">▶ 経費</td></tr>`;
   OPEX_KEYS.forEach(([k,lbl])=>{
     if(k==='supplies'){
@@ -2491,7 +2213,7 @@ function renderDetail(entity) {
       const directSup = +c[k]||0;
       const displayVal = directSup + supTotal;
       if(displayVal) {
-        plRows+=R(lbl, displayVal, {ind:true,budgetVal:bd?.supplies});
+        plRows+=R(lbl, displayVal, {ind:true,budgetVal:bd?.supplies,isExpense:true});
         if(supTotal>0)(c.suppliesVendors||[]).forEach(v=>{ plRows+=`<tr class="pl-ind2"><td>${v.name||'—'}</td><td class="num">${fmt(v.amount)}</td><td class="rate rate-dim">${fmtR(pct(v.amount))}</td></tr>`; });
         if(directSup>0 && supTotal>0) plRows+=`<tr class="pl-ind2"><td>その他（直接入力）</td><td class="num">${fmt(directSup)}</td><td class="rate rate-dim">${fmtR(pct(directSup))}</td></tr>`;
       }
@@ -2502,7 +2224,7 @@ function renderDetail(entity) {
       const uTotal = gas+elec+water;
       const budgetUtil = (bd?.gas||0) + (bd?.electricity||0) + (bd?.water||0);
       if(uTotal) {
-        plRows+=R('水光熱費', uTotal, {ind:true, rate:uTotal/nr*100,budgetVal:budgetUtil||null});
+        plRows+=R('水光熱費', uTotal, {ind:true, rate:uTotal/nr*100,budgetVal:budgetUtil||null,isExpense:true});
         if(gas)        plRows+=`<tr class="pl-ind2"><td>　ガス</td><td class="num">${fmt(gas)}</td><td class="rate rate-dim">${fmtR(pct(gas))}</td></tr>`;
         if(elec)       plRows+=`<tr class="pl-ind2"><td>　電気</td><td class="num">${fmt(elec)}</td><td class="rate rate-dim">${fmtR(pct(elec))}</td></tr>`;
         if(water)      plRows+=`<tr class="pl-ind2"><td>　水道</td><td class="num">${fmt(water)}</td><td class="rate rate-dim">${fmtR(pct(water))}</td></tr>`;
@@ -2512,10 +2234,10 @@ function renderDetail(entity) {
     } else if(k==='lease' && entity.type !== 'hq') {
       // 店舗・居酒屋はリース非表示（PLテーブル）
     } else {
-      if(c[k]) plRows+=R(lbl,c[k],{ind:true,budgetVal:bd?.[k]});
+      if(c[k]) plRows+=R(lbl,c[k],{ind:true,budgetVal:bd?.[k],isExpense:true});
     }
   });
-  plRows+=R('一般管理費合計',c.opex,{tot:true,rate:c.opex/nr*100,budgetVal:bd?.opex});
+  plRows+=R('一般管理費合計',c.opex,{tot:true,rate:c.opex/nr*100,budgetVal:bd?.opex,isExpense:true});
   if(c.otherIncome){plRows+=`<tr class="pl-sec"><td colspan="3">▶ その他</td></tr>`;plRows+=R('雑収入',c.otherIncome,{ind:true});}
   plRows+=R('利益',c.profit,{profit:true,rate:c.profitRate,budgetVal:bd?.profit});
 
@@ -4633,7 +4355,7 @@ window.render = function() {
 // 起動
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){fixStaticSvgIcons();autoLoad();});}else{fixStaticSvgIcons();autoLoad();}
 
-</script><div id="_tt" style="position: fixed; background: rgb(30, 41, 59); color: rgb(241, 245, 249); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; pointer-events: none; z-index: 9999; white-space: nowrap; box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 8px; display: none; left: 554px; top: 411px;">◯de▽三ノ宮: ▲245,500円 / 利益率-6.69%</div><div id="_tt" style="position: fixed; background: rgb(30, 41, 59); color: rgb(241, 245, 249); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; pointer-events: none; z-index: 9999; white-space: nowrap; box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 8px; display: none; left: 745px; top: 503px;">6月 純売上: 0円</div>
+</script><div id="_tt" style="position: fixed; background: rgb(30, 41, 59); color: rgb(241, 245, 249); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; pointer-events: none; z-index: 9999; white-space: nowrap; box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 8px; display: none; left: 874px; top: 465px;">1月 純売上: 648,000円</div><div id="_tt" style="position: fixed; background: rgb(30, 41, 59); color: rgb(241, 245, 249); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; pointer-events: none; z-index: 9999; white-space: nowrap; box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 8px; display: none; left: 745px; top: 503px;">6月 純売上: 0円</div>
 <script>
 // ══════════════════════════════════════
 //  PWA: Service Worker（インライン登録）
