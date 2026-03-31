@@ -1895,8 +1895,28 @@ function renderDetail(entity) {
   plRows+=R('利益',c.profit,{profit:true,rate:c.profitRate});
 
   // 前年比バッジ用ヘルパー
-  const kpiCard=(lbl,val,col,bg,sub,pyVal)=>`
-    <div class="kpi-small" style="border-left:4px solid ${col};background:#fff">
+  const kpiCard=(lbl,val,col,bg,sub,pyVal,budgetVal,isExpense)=>{
+    let budgetHtml = '';
+    if (budgetVal && budgetVal > 0) {
+      const ratio = val / budgetVal * 100;
+      if (isExpense) {
+        // Expense: over budget is bad
+        const over = val > budgetVal;
+        const diff = val - budgetVal;
+        const barColor = over ? '#dc2626' : col;
+        const barWidth = Math.min(ratio, 150);
+        const statusText = over
+          ? `<span style="font-size:10px;font-weight:700;color:#dc2626">予算: ${fmt(budgetVal)}</span> / <span style="background:#dc2626;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700">超過 ${ratio.toFixed(1)}%（+${fmt(diff)}）</span>`
+          : `<span style="font-size:10px;color:var(--muted)">予算: ${fmt(budgetVal)} / 達成率: ${ratio.toFixed(1)}%</span>`;
+        budgetHtml = `<div style="margin-top:5px">${statusText}<div style="height:4px;background:#e5e7eb;border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:${Math.min(barWidth,100)}%;background:${barColor};border-radius:2px"></div></div></div>`;
+      } else {
+        // Revenue/profit: under budget is bad
+        const barColor = ratio >= 100 ? col : '#dc2626';
+        const barWidth = Math.min(ratio, 100);
+        budgetHtml = `<div style="margin-top:5px"><span style="font-size:10px;color:var(--muted)">予算: ${fmt(budgetVal)} / 達成率: ${ratio.toFixed(1)}%</span><div style="height:4px;background:#e5e7eb;border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:${barWidth}%;background:${barColor};border-radius:2px"></div></div></div>`;
+      }
+    }
+    return `<div class="kpi-small" style="border-left:4px solid ${col};background:#fff">
       <div class="kpi-small-label">${lbl}</div>
       <div class="kpi-small-value" style="color:${col};font-size:17px">${fmt(val)}</div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:3px">
@@ -1904,7 +1924,9 @@ function renderDetail(entity) {
         ${yoyBadge(val,pyVal)}
       </div>
       ${pyVal?`<div style="font-size:10px;color:var(--muted);margin-top:2px">前年: ${fmt(pyVal)}</div>`:''}
+      ${budgetHtml}
     </div>`;
+  };
 
   const pyNR = py?.revenue ? Math.round(py.revenue*0.9) : null;
   const pyGP = pyNR!=null && py?.cogs!=null ? pyNR-py.cogs : null;
@@ -1925,16 +1947,24 @@ function renderDetail(entity) {
       + '<div class="hbar-track"><div class="hbar-fill" style="width:' + (i.v/maxC*100) + '%;background:' + i.color + '">' + inner + '</div></div></div>';
   }).join('');
 
+  // 予算データ取得
+  const bd = (entity.data[state.activeMonth]||{}).budgetDetail || {};
+  const bRev = bd.revenue ? Math.round(bd.revenue * 0.9) : ((entity.data[state.activeMonth]||{}).budgetRevenue ? Math.round((entity.data[state.activeMonth]||{}).budgetRevenue * 0.9) : 0);
+  const bGP = bd.grossProfit || 0;
+  const bLabor = bd.laborTotal || 0;
+  const bProfit = bd.profit || (entity.data[state.activeMonth]||{}).budgetProfit || 0;
+  const bCust = (entity.data[state.activeMonth]||{}).budgetCustomerCount || 0;
+
   document.getElementById('mainContent').innerHTML =
     '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px" class="anim">'
-    + kpiCard('純売上高',c.netRevenue,'var(--teal)','var(--teal-pale)',null,pyNR)
-    + kpiCard('粗利益',c.grossProfit,'var(--sky)','var(--sky-pale)',fmtR(c.grossRate),pyGP)
-    + kpiCard('人件費',c.laborTotal,'var(--orange)','var(--orange-pale)',fmtR(c.laborRate),py?.laborTotal||null)
-    + kpiCard('利益',c.profit,c.profit>=0?'var(--green)':'var(--red)',c.profit>=0?'var(--green-pale)':'var(--red-pale)',fmtR(c.profitRate),py?.profit||null)
+    + kpiCard('純売上高',c.netRevenue,'var(--teal)','var(--teal-pale)',null,pyNR,bRev,false)
+    + kpiCard('粗利益',c.grossProfit,'var(--sky)','var(--sky-pale)',fmtR(c.grossRate),pyGP,bGP,false)
+    + kpiCard('人件費',c.laborTotal,'var(--orange)','var(--orange-pale)',fmtR(c.laborRate),py?.laborTotal||null,bLabor,true)
+    + kpiCard('利益',c.profit,c.profit>=0?'var(--green)':'var(--red)',c.profit>=0?'var(--green-pale)':'var(--red-pale)',fmtR(c.profitRate),py?.profit||null,bProfit,false)
     + '</div>'
     + '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:14px" class="anim anim-d1">'
-    + kpiCard('客数',c.customerCount,'var(--purple)','#f5f3ff','当月客数',py?.customerCount||null)
-    + kpiCard('客単価',c.customerUnit,'var(--pink)','#fdf2f8','売上÷客数',pyUnit)
+    + kpiCard('客数',c.customerCount,'var(--purple)','#f5f3ff','当月客数',py?.customerCount||null,bCust,false)
+    + kpiCard('客単価',c.customerUnit,'var(--pink)','#fdf2f8','売上÷客数',pyUnit,0,false)
     + '</div>'
     + memoHtml
     + '<div class="chart-grid-2 anim anim-d1">'
