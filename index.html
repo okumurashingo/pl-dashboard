@@ -880,13 +880,6 @@ function defaultCfData() {
 let state = {
   entities: [
     { id:'overview', name:'全体集計', type:'overview', category:'overview', data:{}, prevYear:{} },
-    seedStore('本町', 720000, 'ramen'),
-    seedStore('東店', 850000, 'ramen'),
-    seedStore('西店', 690000, 'izakaya'),
-    seedStore('南店', 780000, 'izakaya'),
-    seedStore('北店', 620000, 'ramen'),
-    emptyEntity('本部A','hq','hq'),
-    emptyEntity('本部B','hq','hq'),
   ],
   cfData: defaultCfData(),
   overviewTab: 'pl', // 'pl' | 'cf'
@@ -2688,38 +2681,45 @@ function autoSave() {
 }
 
 function autoLoad() {
-  // 1. HTMLに埋め込まれたデータを優先
+  // 1. HTMLに埋め込まれたデータを最優先（GitHub Pages用）
+  let embeddedLoaded = false;
   try {
     const el = document.getElementById('embedded-state');
     if (el) {
-      const saved = JSON.parse(el.textContent.replace('window.__SAVED_STATE__ = ','').replace(/;$/, ''));
-      if (saved && saved.entities) {
-        state.entities = saved.entities;
-        state.cfData   = saved.cfData || defaultCfData();
-        render();
-        return;
-      }
-    }
-  } catch(e) {}
-
-  // 2. localStorageのバックアップ
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    if (raw) {
+      const raw = el.textContent.replace('window.__SAVED_STATE__ = ','').replace(/;\s*$/, '');
       const saved = JSON.parse(raw);
-      if (saved && saved.entities) {
+      if (saved && saved.entities && saved.entities.length > 1) {
         state.entities = saved.entities;
         state.cfData   = saved.cfData || defaultCfData();
-        const banner = document.createElement('div');
-        banner.style.cssText = 'position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#0f766e;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.3)';
-        banner.textContent = '🔄 前回の自動保存データを復元しました';
-        document.body.appendChild(banner);
-        setTimeout(() => banner.remove(), 4000);
-        render();
-        return;
+        // embedded-stateで読めたらlocalStorageも更新（キャッシュ汚染を防止）
+        try { localStorage.setItem(LS_KEY, JSON.stringify({ entities: state.entities, cfData: state.cfData })); } catch(e2){}
+        embeddedLoaded = true;
       }
     }
-  } catch(e) {}
+  } catch(e) {
+    console.warn('embedded-state parse error:', e);
+  }
+
+  // 2. embedded-stateが無い場合のみlocalStorageを使う
+  if (!embeddedLoaded) {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved && saved.entities && saved.entities.length > 1) {
+          state.entities = saved.entities;
+          state.cfData   = saved.cfData || defaultCfData();
+          const banner = document.createElement('div');
+          banner.style.cssText = 'position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#0f766e;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.3)';
+          banner.textContent = '🔄 前回の自動保存データを復元しました';
+          document.body.appendChild(banner);
+          setTimeout(() => banner.remove(), 4000);
+        }
+      }
+    } catch(e) {
+      console.warn('localStorage parse error:', e);
+    }
+  }
 
   render();
 }
