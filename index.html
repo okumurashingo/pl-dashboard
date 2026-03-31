@@ -1900,15 +1900,19 @@ function renderDetail(entity) {
     if (budgetVal && budgetVal > 0) {
       const ratio = val / budgetVal * 100;
       if (isExpense) {
-        // Expense: over budget is bad
+        // Expense: under budget is GOOD, over budget is BAD
         const over = val > budgetVal;
-        const diff = val - budgetVal;
-        const barColor = over ? '#dc2626' : col;
-        const barWidth = Math.min(ratio, 150);
-        const statusText = over
-          ? `<span style="font-size:10px;font-weight:700;color:#dc2626">予算: ${fmt(budgetVal)}</span> / <span style="background:#dc2626;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700">超過 ${ratio.toFixed(1)}%（+${fmt(diff)}）</span>`
-          : `<span style="font-size:10px;color:var(--muted)">予算: ${fmt(budgetVal)} / 達成率: ${ratio.toFixed(1)}%</span>`;
-        budgetHtml = `<div style="margin-top:5px">${statusText}<div style="height:4px;background:#e5e7eb;border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:${Math.min(barWidth,100)}%;background:${barColor};border-radius:2px"></div></div></div>`;
+        const diff = Math.abs(val - budgetVal);
+        const saved = budgetVal - val;
+        if (over) {
+          const barColor = '#dc2626';
+          const statusText = `<span style="font-size:10px;font-weight:700;color:#dc2626">予算: ${fmt(budgetVal)}</span> / <span style="background:#dc2626;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700">超過 ${ratio.toFixed(1)}%（+${fmt(diff)}）</span>`;
+          budgetHtml = `<div style="margin-top:5px">${statusText}<div style="height:4px;background:#e5e7eb;border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:100%;background:${barColor};border-radius:2px"></div></div></div>`;
+        } else {
+          const barColor = '#16a34a';
+          const statusText = `<span style="font-size:10px;color:var(--muted)">予算: ${fmt(budgetVal)}</span> / <span style="background:#16a34a;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700">▼${fmt(saved)} 節約</span>`;
+          budgetHtml = `<div style="margin-top:5px">${statusText}<div style="height:4px;background:#e5e7eb;border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:${ratio.toFixed(1)}%;background:${barColor};border-radius:2px"></div></div></div>`;
+        }
       } else {
         // Revenue/profit: under budget is bad
         const barColor = ratio >= 100 ? col : '#dc2626';
@@ -1978,22 +1982,23 @@ function renderDetail(entity) {
         const fiscalMonths = ['10月','11月','12月','1月','2月','3月','4月','5月','6月','7月','8月','9月'];
         const revenues = fiscalMonths.map(m => { const cc = calcEntity(entity, m); return cc ? cc.netRevenue : 0; });
         const maxR = Math.max(...revenues, 1);
-        const barColors = fiscalMonths.map(m => m === state.activeMonth ? '#2ab4b4' : '#a5f3fc');
-        const H = 100;
+        const barColors = fiscalMonths.map(m => m === state.activeMonth ? '#0d9488' : '#99f6e4');
+        const H = 140;
         const barsHtml = fiscalMonths.map((m, i) => {
-          const bh = Math.max(revenues[i] / maxR * H, 2);
+          const bh = Math.max(revenues[i] / maxR * H, revenues[i] > 0 ? 8 : 2);
           const tp = H - bh;
           const valStr = revenues[i] > 0 ? (revenues[i]/10000).toFixed(0)+'万' : '';
+          const isActive = m === state.activeMonth;
+          const valColor = isActive ? '#0d9488' : '#64748b';
           return `<div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'${m} 純売上: ${fmt(revenues[i])}円')" onmouseleave="hideTT()">
             <div style="height:${tp}px;width:100%"></div>
-            <div style="height:${bh}px;background:${barColors[i]};border-radius:3px 3px 0 0;width:100%"></div>
-            <div style="font-size:9px;color:${barColors[i]};text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700">${valStr}</div>
-            <span class="wf-l" style="font-size:9px;${m===state.activeMonth?'color:#2ab4b4;font-weight:800':''}">${m.replace('月','')}</span>
+            <div style="height:${bh}px;background:${barColors[i]};border-radius:3px 3px 0 0;width:100%;${isActive?'box-shadow:0 0 0 2px #0d9488;':''}"></div>
+            <div style="font-size:9px;color:${valColor};text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700">${valStr}</div>
+            <span class="wf-l" style="font-size:9px;${isActive?'color:#0d9488;font-weight:900':'color:var(--muted)'}">${m.replace('月','')}</span>
           </div>`;
         }).join('');
         return '<div class="card card-p"><div class="card-title">年間売上推移（10月〜9月）</div><div class="wf-wrap" style="align-items:flex-end">' + barsHtml + '</div></div>';
       })()
-    + '<div class="card card-p"><div class="card-title">費用内訳（上位）</div>' + hbarHtml + '</div>'
     + '</div></div>';
 }
 
