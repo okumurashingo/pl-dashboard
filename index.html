@@ -458,6 +458,8 @@ tr:hover .rate-dim { color:var(--muted); }
   <div class="topbar-title" id="topTitle">マルチ店舗管理</div>
   <div class="topbar-right">
     <button class="btn btn-ghost btn-sm" onclick="openCsvModal()">📥 CSV インポート</button>
+    <button class="btn btn-ghost btn-sm" onclick="openPdfImportModal()">📄 PDF 請求書</button>
+    <button class="btn btn-ghost btn-sm" onclick="pasteHelpAdj()" title="労働時間調整値ツールからコピーしたデータを貼り付け">📋 ヘルプ調整貼付</button>
     <button class="btn btn-ghost btn-sm" onclick="exportCsv()">📤 エクスポート</button>
     <div class="topbar-sep"></div>
     <button class="btn btn-ghost btn-sm" onclick="saveDataJson()">💾 データ保存</button>
@@ -869,7 +871,7 @@ tr:hover .rate-dim { color:var(--muted); }
       <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
         <label style="font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap">対象月：</label>
         <select id="vendorMonth" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Noto Sans JP',sans-serif;flex:1">
-          ${['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'].map(m=&gt;`<option value="${m}" ${m="=='2月'?'" selected':''}="">${m}</option>`).join('')}
+          <option value="1月">1月</option><option value="2月" selected>2月</option><option value="3月">3月</option><option value="4月">4月</option><option value="5月">5月</option><option value="6月">6月</option><option value="7月">7月</option><option value="8月">8月</option><option value="9月">9月</option><option value="10月">10月</option><option value="11月">11月</option><option value="12月">12月</option>
         </select>
         <label style="font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap">既存データ：</label>
         <select id="vendorMode" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Noto Sans JP',sans-serif;flex:1">
@@ -1228,7 +1230,7 @@ function renderSubheader() {
 }
 
 function setMonth(m) { state.activeMonth=m; render(); }
-function setActive(id) { state.activeId=id; state.editMode=false; render(); }
+function setActive(id) { state.activeId=id; state.editMode=false; render(); window.scrollTo(0,0); }
 function toggleEdit() { state.editMode=!state.editMode; render(); }
 
 // ══════════════════════════════════════
@@ -2892,6 +2894,569 @@ function saveHtml() {
 
 
 // ══════════════════════════════════════
+//  NOTIFICATION HELPER
+// ══════════════════════════════════════
+function notif(msg) {
+  const el = document.getElementById('notif');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ══════════════════════════════════════
+//  CSV / PDF IMPORT
+// ══════════════════════════════════════
+let _vendorParsed = null; // parsed CSV data: [{store, vendor, amount}, ...]
+
+function openCsvModal() {
+  _vendorParsed = null;
+  const modal = document.getElementById('csvModal');
+  if (!modal) return;
+  // reset UI
+  const dz = document.getElementById('vendorDropZone');
+  if (dz) { dz.style.borderColor = 'var(--border)'; dz.style.background = '#fafafa'; }
+  const prev = document.getElementById('vendorPreview');
+  if (prev) prev.style.display = 'none';
+  const btn = document.getElementById('vendorExecBtn');
+  if (btn) { btn.disabled = true; btn.style.opacity = '.5'; }
+  const fi = document.getElementById('vendorFileInput');
+  if (fi) fi.value = '';
+  // default month select to activeMonth
+  const ms = document.getElementById('vendorMonth');
+  if (ms) { for (let o of ms.options) { if (o.value === state.activeMonth) { o.selected = true; break; } } }
+  switchCsvTab(1);
+  modal.classList.add('show');
+}
+
+function closeCsvModal() {
+  const modal = document.getElementById('csvModal');
+  if (modal) modal.classList.remove('show');
+  _vendorParsed = null;
+}
+
+function switchCsvTab(n) {
+  const t1 = document.getElementById('csvTab1');
+  const t2 = document.getElementById('csvTab2');
+  const p1 = document.getElementById('csvPane1');
+  const p2 = document.getElementById('csvPane2');
+  if (n === 1) {
+    if (t1) { t1.style.background = 'var(--teal)'; t1.style.color = '#fff'; }
+    if (t2) { t2.style.background = 'transparent'; t2.style.color = 'var(--muted)'; }
+    if (p1) p1.style.display = '';
+    if (p2) p2.style.display = 'none';
+  } else {
+    if (t2) { t2.style.background = 'var(--teal)'; t2.style.color = '#fff'; }
+    if (t1) { t1.style.background = 'transparent'; t1.style.color = 'var(--muted)'; }
+    if (p1) p1.style.display = 'none';
+    if (p2) p2.style.display = '';
+  }
+}
+
+function handleVendorDrop(e) {
+  e.preventDefault();
+  e.currentTarget.style.borderColor = 'var(--border)';
+  e.currentTarget.style.background = '#fafafa';
+  const file = (e.dataTransfer.files || [])[0];
+  if (file) handleVendorFile(file);
+}
+
+function handleVendorFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    let text;
+    // Try Shift-JIS first, then UTF-8
+    try {
+      const decoder = new TextDecoder('shift-jis');
+      text = decoder.decode(new Uint8Array(ev.target.result));
+    } catch(e) {
+      text = new TextDecoder('utf-8').decode(new Uint8Array(ev.target.result));
+    }
+    _vendorParsed = parseVendorCsv(text);
+    showVendorPreview(_vendorParsed);
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function parseVendorCsv(text) {
+  const lines = text.split(/\r?\n/);
+  const results = []; // [{store, vendor, amount}]
+  let currentStore = '';
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+
+    // Detect store header lines like "0001:株式会社銀の葡萄" or "0005:Esperanza（株式会社銀の葡萄）"
+    const storeMatch = line.match(/^\d{3,4}[:：](.+)/);
+    if (storeMatch) {
+      currentStore = normalizeStoreName(storeMatch[1].trim());
+      continue;
+    }
+
+    // Parse CSV row: 項番, 取引先コード, 取引先, 締め日, 支払期日, 金額, ...
+    const cols = line.split(',');
+    if (cols.length < 6) continue;
+    // Skip header rows
+    if (cols[0].includes('項番') || cols[0].includes('店舗')) continue;
+    // Skip subtotal rows
+    if (line.includes('店舗・部門合計')) continue;
+
+    const vendorName = (cols[2] || '').trim();
+    const amountStr = (cols[5] || '').trim();
+    if (!vendorName || !amountStr) continue;
+    const amount = Math.abs(parseInt(amountStr.replace(/[¥￥,\\s]/g, '').replace(/[^0-9\-]/g, ''), 10) || 0);
+    if (amount === 0 && !amountStr.includes('0')) continue;
+
+    if (currentStore && vendorName) {
+      results.push({ store: currentStore, vendor: vendorName, amount: amount });
+    }
+  }
+  return results;
+}
+
+function normalizeStoreName(name) {
+  // Remove company suffix like "（株式会社〇〇）" or "(株式会社〇〇)"
+  let n = name.replace(/[（(][^)）]*株式会社[^)）]*[)）]/g, '').trim();
+  // Remove leading/trailing spaces
+  n = n.replace(/\s+/g, ' ').trim();
+  return n;
+}
+
+function matchStoreEntity(storeName) {
+  // Try exact match first
+  let match = state.entities.find(e => e.type === 'store' && e.name === storeName);
+  if (match) return match;
+  // Try contains match
+  match = state.entities.find(e => e.type === 'store' && storeName.includes(e.name));
+  if (match) return match;
+  match = state.entities.find(e => e.type === 'store' && e.name.includes(storeName));
+  if (match) return match;
+  // Try partial match (first 3 chars)
+  if (storeName.length >= 3) {
+    match = state.entities.find(e => e.type === 'store' && e.name.includes(storeName.substring(0, 3)));
+    if (match) return match;
+  }
+  return null;
+}
+
+function showVendorPreview(data) {
+  if (!data || !data.length) {
+    const dz = document.getElementById('vendorDropZone');
+    if (dz) { dz.style.borderColor = '#ef4444'; dz.style.background = '#fef2f2'; }
+    return;
+  }
+  // Group by store
+  const byStore = {};
+  data.forEach(r => {
+    if (!byStore[r.store]) byStore[r.store] = [];
+    byStore[r.store].push(r);
+  });
+
+  const pTitle = document.getElementById('vendorPreviewTitle');
+  const pList = document.getElementById('vendorPreviewList');
+  const prev = document.getElementById('vendorPreview');
+
+  let html = '<table style="width:100%;border-collapse:collapse">';
+  let matchCount = 0;
+  let totalStores = Object.keys(byStore).length;
+
+  Object.keys(byStore).forEach(store => {
+    const entity = matchStoreEntity(store);
+    const matched = !!entity;
+    if (matched) matchCount++;
+    const rows = byStore[store];
+    const total = rows.reduce((s, r) => s + r.amount, 0);
+    const icon = matched ? '✅' : '⚠️';
+    const label = matched ? entity.name : store + '（未マッチ）';
+    html += '<tr style="background:' + (matched ? '#f0fdf4' : '#fef9ee') + ';border-bottom:1px solid var(--border)">'
+      + '<td style="padding:4px 8px;font-size:11px;font-weight:700">' + icon + ' ' + label + '</td>'
+      + '<td style="padding:4px 8px;font-size:11px;text-align:right">' + rows.length + '件</td>'
+      + '<td style="padding:4px 8px;font-size:11px;text-align:right;font-family:\'DM Mono\',monospace">' + fmt(total) + '</td></tr>';
+  });
+  html += '</table>';
+
+  if (pTitle) pTitle.textContent = '📋 プレビュー: ' + totalStores + '店舗中 ' + matchCount + '店舗マッチ（' + data.length + '件）';
+  if (pList) pList.innerHTML = html;
+  if (prev) prev.style.display = '';
+
+  const btn = document.getElementById('vendorExecBtn');
+  if (btn && matchCount > 0) { btn.disabled = false; btn.style.opacity = '1'; }
+}
+
+function execVendorImport() {
+  if (!_vendorParsed || !_vendorParsed.length) return;
+  const month = document.getElementById('vendorMonth').value;
+  const mode = document.getElementById('vendorMode').value;
+
+  // Group by store
+  const byStore = {};
+  _vendorParsed.forEach(r => {
+    if (!byStore[r.store]) byStore[r.store] = [];
+    byStore[r.store].push(r);
+  });
+
+  let importedStores = 0;
+  Object.keys(byStore).forEach(store => {
+    const entity = matchStoreEntity(store);
+    if (!entity) return;
+    const d = entity.data[month];
+    if (!d) return;
+
+    const rows = byStore[store];
+    if (mode === 'replace') {
+      // Replace: clear existing vendors, add new ones
+      d.vendors = rows.map(r => ({ name: simplifyVendorName(r.vendor), amount: r.amount }));
+    } else {
+      // Merge: add to existing or create new vendor entries
+      rows.forEach(r => {
+        const vName = simplifyVendorName(r.vendor);
+        const existing = d.vendors.find(v => v.name === vName);
+        if (existing) {
+          existing.amount += r.amount;
+        } else {
+          d.vendors.push({ name: vName, amount: r.amount });
+        }
+      });
+    }
+    importedStores++;
+  });
+
+  closeCsvModal();
+  render();
+  autoSave();
+  notif('✅ ' + importedStores + '店舗の仕入データを' + month + 'に反映しました');
+}
+
+function simplifyVendorName(name) {
+  return name
+    .replace(/株式会社/g, '')
+    .replace(/有限会社/g, '')
+    .replace(/\s+/g, '')
+    .trim() || name;
+}
+
+// 汎用CSVインポート（タブ2）
+function importCsv() {
+  const text = (document.getElementById('csvInput') || {}).value;
+  if (!text || !text.trim()) { notif('⚠️ CSVデータを入力してください'); return; }
+  const lines = text.trim().split(/\r?\n/);
+  let updated = 0;
+  lines.forEach(line => {
+    const cols = line.split(',');
+    if (cols.length < 3) return;
+    const name = cols[0].trim();
+    const month = cols[1].trim();
+    const entity = state.entities.find(e => e.name === name);
+    if (!entity || !entity.data[month]) return;
+    const d = entity.data[month];
+    // 売上, 純売上高, 仕入合計, 人件費社員, 人件費福利厚生, 人件費AP, ヘルプ調整, Timee...
+    if (cols[2]) d.revenue = fromComma(cols[2]);
+    if (cols[3]) d.netRevenue = fromComma(cols[3]);
+    if (cols[4]) { /* purchase total - skip, calculated from vendors */ }
+    if (cols[5]) d.laborStaff = fromComma(cols[5]);
+    if (cols[6]) d.laborWelfare = fromComma(cols[6]);
+    if (cols[7]) d.laborAP = fromComma(cols[7]);
+    if (cols[8]) d.helpAdj = fromComma(cols[8]);
+    if (cols[9]) d.timee = fromComma(cols[9]);
+    updated++;
+  });
+  closeCsvModal();
+  render();
+  autoSave();
+  notif('✅ ' + updated + '件のデータをインポートしました');
+}
+
+// ── PDF Invoice Import ──
+function openPdfImportModal() {
+  const existing = document.getElementById('pdfImportModal');
+  if (existing) existing.remove();
+
+  const months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const monthOpts = months.map(m => '<option value="' + m + '"' + (m === state.activeMonth ? ' selected' : '') + '>' + m + '</option>').join('');
+
+  const html = '<div class="modal-bg" id="pdfImportModal" style="display:flex">'
+    + '<div class="modal" style="width:540px;max-width:95vw">'
+    + '<h2>📄 PDF 請求書インポート</h2>'
+    + '<div style="background:#fff;border:1px solid var(--teal-pale2);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:var(--text2);line-height:1.9">'
+    + '<b style="color:var(--teal-dark)">📌 対応フォーマット</b><br>'
+    + '「請求一覧（店舗・部門別）」のPDF<br>'
+    + '<span style="color:var(--muted)">'
+    + '・各ページの店舗ヘッダーから店舗を自動判別<br>'
+    + '・取引先名と金額（税抜）を取り込み<br>'
+    + '・店舗名を既存データに自動マッチング</span></div>'
+    + '<div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">'
+    + '<label style="font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap">対象月：</label>'
+    + '<select id="pdfMonth" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:\'Noto Sans JP\',sans-serif;flex:1">' + monthOpts + '</select>'
+    + '<label style="font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap">既存データ：</label>'
+    + '<select id="pdfMode" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:\'Noto Sans JP\',sans-serif;flex:1">'
+    + '<option value="replace">上書き（全差替）</option><option value="merge">追記（合算）</option></select></div>'
+    + '<div id="pdfDropZone" style="border:2px dashed var(--border);border-radius:8px;padding:22px;text-align:center;cursor:pointer;background:#fafafa;transition:all .15s"'
+    + ' onclick="document.getElementById(\'pdfFileInput\').click()"'
+    + ' ondragover="event.preventDefault();this.style.borderColor=\'var(--teal)\';this.style.background=\'var(--teal-pale)\'"'
+    + ' ondragleave="this.style.borderColor=\'var(--border)\';this.style.background=\'#fafafa\'"'
+    + ' ondrop="handlePdfDrop(event)">'
+    + '<div style="font-size:26px;margin-bottom:4px">📄</div>'
+    + '<div style="font-size:13px;font-weight:700;color:var(--text2)">クリック or ドラッグ＆ドロップ</div>'
+    + '<div style="font-size:11px;color:var(--muted);margin-top:3px">請求一覧PDFファイルを選択</div></div>'
+    + '<input type="file" id="pdfFileInput" accept=".pdf" style="display:none" onchange="handlePdfFile(this.files[0])">'
+    + '<div id="pdfPreview" style="display:none;margin-top:12px">'
+    + '<div id="pdfPreviewTitle" style="font-size:11px;font-weight:700;margin-bottom:6px"></div>'
+    + '<div id="pdfPreviewList" style="border:1px solid var(--border);border-radius:7px;max-height:150px;overflow-y:auto;font-size:11px"></div></div>'
+    + '<div class="modal-btns" style="margin-top:14px">'
+    + '<button class="btn" onclick="closePdfImport()">キャンセル</button>'
+    + '<button class="btn btn-primary" id="pdfExecBtn" onclick="execPdfImport()" disabled style="opacity:.5">インポート実行</button></div>'
+    + '</div></div>';
+
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+let _pdfParsed = null;
+
+function closePdfImport() {
+  const el = document.getElementById('pdfImportModal');
+  if (el) el.remove();
+  _pdfParsed = null;
+}
+
+function handlePdfDrop(e) {
+  e.preventDefault();
+  e.currentTarget.style.borderColor = 'var(--border)';
+  e.currentTarget.style.background = '#fafafa';
+  const file = (e.dataTransfer.files || [])[0];
+  if (file) handlePdfFile(file);
+}
+
+async function handlePdfFile(file) {
+  if (!file) return;
+  const dz = document.getElementById('pdfDropZone');
+  if (dz) { dz.innerHTML = '<div style="font-size:13px;color:var(--muted)">⏳ PDFを解析中...</div>'; }
+
+  try {
+    // Load pdf.js from CDN if not loaded
+    if (!window.pdfjsLib) {
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const results = [];
+    let currentStore = '';
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
+      const items = textContent.items.map(it => it.str).filter(s => s.trim());
+
+      // Find store header: pattern like "0001:店舗名" or "003:店舗名"
+      for (let j = 0; j < items.length; j++) {
+        const storeMatch = items[j].match(/^\d{3,4}[:：](.+)/);
+        if (storeMatch) {
+          currentStore = normalizeStoreName(storeMatch[1].trim());
+          break;
+        }
+      }
+
+      if (!currentStore) continue;
+
+      // Parse rows: look for patterns of vendor code + vendor name + amount
+      // The text items come in reading order; we look for sequences
+      for (let j = 0; j < items.length; j++) {
+        const t = items[j].trim();
+        // Skip headers, subtotals
+        if (t.includes('項番') || t.includes('取引先コード') || t.includes('店舗・部門合計')) continue;
+        if (t.includes('締め日') || t.includes('支払期日') || t.includes('請求金額')) continue;
+
+        // Look for vendor code (4-digit number at start of a row)
+        if (/^\d{4}$/.test(t)) {
+          // Next item should be vendor name
+          const vendorName = (items[j + 1] || '').trim();
+          if (!vendorName || vendorName === '末日') continue;
+
+          // Find the amount: look for ¥ pattern in nearby items
+          let amount = 0;
+          for (let k = j + 2; k < Math.min(j + 8, items.length); k++) {
+            const val = items[k].trim();
+            if (val.match(/^[¥￥]?[-]?[\d,]+$/)) {
+              amount = Math.abs(parseInt(val.replace(/[¥￥,]/g, ''), 10) || 0);
+              break;
+            }
+          }
+
+          if (vendorName && amount > 0) {
+            results.push({ store: currentStore, vendor: vendorName, amount: amount });
+          }
+        }
+      }
+    }
+
+    _pdfParsed = results;
+    if (dz) {
+      dz.innerHTML = '<div style="font-size:13px;color:var(--teal-dark);font-weight:700">✅ ' + file.name + '</div>'
+        + '<div style="font-size:11px;color:var(--muted);margin-top:3px">' + results.length + '件のデータを検出</div>';
+    }
+    showPdfPreview(results);
+
+  } catch(err) {
+    console.error('PDF parse error:', err);
+    if (dz) {
+      dz.innerHTML = '<div style="font-size:13px;color:#ef4444;font-weight:700">❌ PDF解析エラー</div>'
+        + '<div style="font-size:11px;color:var(--muted);margin-top:3px">' + err.message + '</div>';
+    }
+  }
+}
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+function showPdfPreview(data) {
+  if (!data || !data.length) return;
+  const byStore = {};
+  data.forEach(r => {
+    if (!byStore[r.store]) byStore[r.store] = [];
+    byStore[r.store].push(r);
+  });
+
+  const pTitle = document.getElementById('pdfPreviewTitle');
+  const pList = document.getElementById('pdfPreviewList');
+  const prev = document.getElementById('pdfPreview');
+
+  let html = '<table style="width:100%;border-collapse:collapse">';
+  let matchCount = 0;
+  let totalStores = Object.keys(byStore).length;
+
+  Object.keys(byStore).forEach(store => {
+    const entity = matchStoreEntity(store);
+    const matched = !!entity;
+    if (matched) matchCount++;
+    const rows = byStore[store];
+    const total = rows.reduce((s, r) => s + r.amount, 0);
+    const icon = matched ? '✅' : '⚠️';
+    const label = matched ? entity.name : store + '（未マッチ）';
+    html += '<tr style="background:' + (matched ? '#f0fdf4' : '#fef9ee') + ';border-bottom:1px solid var(--border)">'
+      + '<td style="padding:4px 8px;font-size:11px;font-weight:700">' + icon + ' ' + label + '</td>'
+      + '<td style="padding:4px 8px;font-size:11px;text-align:right">' + rows.length + '件</td>'
+      + '<td style="padding:4px 8px;font-size:11px;text-align:right;font-family:\'DM Mono\',monospace">' + fmt(total) + '</td></tr>';
+  });
+  html += '</table>';
+
+  if (pTitle) pTitle.textContent = '📋 プレビュー: ' + totalStores + '店舗中 ' + matchCount + '店舗マッチ（' + data.length + '件）';
+  if (pList) pList.innerHTML = html;
+  if (prev) prev.style.display = '';
+
+  const btn = document.getElementById('pdfExecBtn');
+  if (btn && matchCount > 0) { btn.disabled = false; btn.style.opacity = '1'; }
+}
+
+function execPdfImport() {
+  if (!_pdfParsed || !_pdfParsed.length) return;
+  const month = document.getElementById('pdfMonth').value;
+  const mode = document.getElementById('pdfMode').value;
+
+  const byStore = {};
+  _pdfParsed.forEach(r => {
+    if (!byStore[r.store]) byStore[r.store] = [];
+    byStore[r.store].push(r);
+  });
+
+  let importedStores = 0;
+  Object.keys(byStore).forEach(store => {
+    const entity = matchStoreEntity(store);
+    if (!entity) return;
+    const d = entity.data[month];
+    if (!d) return;
+
+    const rows = byStore[store];
+    if (mode === 'replace') {
+      d.vendors = rows.map(r => ({ name: simplifyVendorName(r.vendor), amount: r.amount }));
+    } else {
+      rows.forEach(r => {
+        const vName = simplifyVendorName(r.vendor);
+        const existing = d.vendors.find(v => v.name === vName);
+        if (existing) {
+          existing.amount += r.amount;
+        } else {
+          d.vendors.push({ name: vName, amount: r.amount });
+        }
+      });
+    }
+    importedStores++;
+  });
+
+  closePdfImport();
+  render();
+  autoSave();
+  notif('✅ ' + importedStores + '店舗の仕入データを' + month + 'に反映しました');
+}
+
+// ── ヘルプ調整値 貼り付け（労働時間調整値ツール連携）──
+async function pasteHelpAdj() {
+  let text = '';
+  try {
+    text = await navigator.clipboard.readText();
+  } catch(e) {
+    // Clipboard API failed - show manual paste dialog
+    text = prompt('クリップボードのアクセスが拒否されました。\n労働時間調整値ツールでコピーしたJSONデータを貼り付けてください:');
+    if (!text) return;
+  }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(text.trim());
+  } catch(e) {
+    notif('⚠️ データ形式が正しくありません');
+    return;
+  }
+
+  if (!parsed || parsed.type !== 'pl_helpAdj' || !parsed.data) {
+    notif('⚠️ ヘルプ調整データではありません');
+    return;
+  }
+
+  const helpData = parsed.data; // { "店舗名": 金額, ... }
+  const month = state.activeMonth;
+  let updated = 0;
+  let details = [];
+
+  Object.keys(helpData).forEach(storeName => {
+    const amount = helpData[storeName];
+    // Match store by name (try exact, then partial)
+    let entity = state.entities.find(e => e.type === 'store' && e.name === storeName);
+    if (!entity) {
+      // Try without "店" suffix or partial match
+      entity = state.entities.find(e => e.type === 'store' && (
+        storeName.includes(e.name) || e.name.includes(storeName) ||
+        storeName.replace(/店$/, '') === e.name.replace(/店$/, '')
+      ));
+    }
+    if (entity && entity.data[month]) {
+      entity.data[month].helpAdj = Math.round(amount);
+      updated++;
+      details.push(entity.name + ': ' + fmt(amount));
+    }
+  });
+
+  if (updated === 0) {
+    notif('⚠️ マッチする店舗が見つかりませんでした');
+    return;
+  }
+
+  render();
+  autoSave();
+  notif('✅ ' + updated + '店舗のヘルプ調整を' + month + 'に反映しました');
+}
+
+// ══════════════════════════════════════
 //  AUTO-SAVE & INIT
 // ══════════════════════════════════════
 const LS_KEY = 'pl_dashboard_autosave';
@@ -2948,6 +3513,8 @@ function selectStore(id) {
   document.querySelectorAll('.sidebar-item').forEach(el => {
     el.classList.toggle('active', el.getAttribute('data-id') === id || el.onclick?.toString().includes("'" + id + "'"));
   });
+  // Scroll to top on store switch (especially for mobile)
+  window.scrollTo(0, 0);
 }
 
 function autoLoad() {
