@@ -2744,8 +2744,12 @@ window.render = function() {
   _autoSaveTimer = setTimeout(autoSave, 3000);
 };
 
-// 起動
-autoLoad();
+// 起動（embedded-stateスクリプトが後にあるため、DOM解析完了を待つ）
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', autoLoad);
+} else {
+  autoLoad();
+}
 
 </script>
 
