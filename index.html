@@ -1978,26 +1978,76 @@ function renderDetail(entity) {
     + '</tr></thead><tbody>' + plRows + '</tbody></table></div>'
     + '<div style="display:flex;flex-direction:column;gap:14px">'
     + (() => {
-        // 年間売上推移グラフ（10月〜9月）
         const fiscalMonths = ['10月','11月','12月','1月','2月','3月','4月','5月','6月','7月','8月','9月'];
-        const revenues = fiscalMonths.map(m => { const cc = calcEntity(entity, m); return cc ? cc.netRevenue : 0; });
-        const maxR = Math.max(...revenues, 1);
-        const barColors = fiscalMonths.map(m => m === state.activeMonth ? '#0d9488' : '#99f6e4');
         const H = 140;
-        const barsHtml = fiscalMonths.map((m, i) => {
-          const bh = Math.max(revenues[i] / maxR * H, revenues[i] > 0 ? 8 : 2);
-          const tp = H - bh;
-          const valStr = revenues[i] > 0 ? (revenues[i]/10000).toFixed(0)+'万' : '';
-          const isActive = m === state.activeMonth;
-          const valColor = isActive ? '#0d9488' : '#64748b';
-          return `<div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,'${m} 純売上: ${fmt(revenues[i])}円')" onmouseleave="hideTT()">
-            <div style="height:${tp}px;width:100%"></div>
-            <div style="height:${bh}px;background:${barColors[i]};border-radius:3px 3px 0 0;width:100%;${isActive?'box-shadow:0 0 0 2px #0d9488;':''}"></div>
-            <div style="font-size:9px;color:${valColor};text-align:center;font-family:'DM Mono',monospace;margin-top:2px;font-weight:700">${valStr}</div>
-            <span class="wf-l" style="font-size:9px;${isActive?'color:#0d9488;font-weight:900':'color:var(--muted)'}">${m.replace('月','')}</span>
-          </div>`;
-        }).join('');
-        return '<div class="card card-p"><div class="card-title">年間売上推移（10月〜9月）</div><div class="wf-wrap" style="align-items:flex-end">' + barsHtml + '</div></div>';
+
+        // ── 共通バー生成関数（最小値起点でメリハリ） ──
+        function makeBarChart(title, values, activeColor, inactiveColor, tooltipPrefix, unit) {
+          const dataVals = values.filter(v => v > 0);
+          if (!dataVals.length) return '';
+          const maxV = Math.max(...dataVals);
+          const minV = Math.min(...dataVals);
+          const range = maxV - minV || 1;
+          // 最小値を全体の20%、最大値を100%にして差を強調
+          const calcH = (v) => v > 0 ? Math.max(H * 0.2 + (v - minV) / range * H * 0.8, 10) : 2;
+
+          return '<div class="card card-p"><div class="card-title">' + title + '</div><div class="wf-wrap" style="align-items:flex-end">'
+            + fiscalMonths.map((m, i) => {
+              const bh = calcH(values[i]);
+              const tp = H - bh;
+              const isActive = m === state.activeMonth;
+              const barCol = isActive ? activeColor : inactiveColor;
+              const valColor = isActive ? activeColor : '#64748b';
+              const valStr = values[i] > 0 ? (Math.abs(values[i])/10000).toFixed(0) + unit : '';
+              const isNeg = values[i] < 0;
+              return '<div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,\'' + m + ' ' + tooltipPrefix + ': ' + fmt(values[i]) + '円\')" onmouseleave="hideTT()">'
+                + '<div style="height:' + tp + 'px;width:100%"></div>'
+                + '<div style="height:' + bh + 'px;background:' + barCol + ';border-radius:3px 3px 0 0;width:100%;' + (isActive?'box-shadow:0 0 0 2px '+activeColor+';':'') + '"></div>'
+                + '<div style="font-size:9px;color:' + valColor + ';text-align:center;font-family:\'DM Mono\',monospace;margin-top:2px;font-weight:700">' + (isNeg?'▲':'') + valStr + '</div>'
+                + '<span class="wf-l" style="font-size:9px;' + (isActive?'color:'+activeColor+';font-weight:900':'color:var(--muted)') + '">' + m.replace('月','') + '</span>'
+                + '</div>';
+            }).join('')
+            + '</div></div>';
+        }
+
+        // ── 売上推移 ──
+        const revenues = fiscalMonths.map(m => { const cc = calcEntity(entity, m); return cc ? cc.netRevenue : 0; });
+        const revChart = makeBarChart('年間売上推移（10月〜9月）', revenues, '#0d9488', '#99f6e4', '純売上', '万');
+
+        // ── 利益推移 ──
+        const profits = fiscalMonths.map(m => { const cc = calcEntity(entity, m); return cc ? cc.profit : 0; });
+        const profitColors = fiscalMonths.map(m => {
+          const cc = calcEntity(entity, m);
+          return cc && cc.profit < 0 ? true : false;
+        });
+        // 利益は赤字もあるため特別処理
+        const profitDataVals = profits.filter(v => v !== 0);
+        let profitChart = '';
+        if (profitDataVals.length) {
+          const maxP = Math.max(...profitDataVals.map(v=>Math.abs(v)));
+          profitChart = '<div class="card card-p"><div class="card-title">年間利益推移（10月〜9月）</div><div class="wf-wrap" style="align-items:flex-end">'
+            + fiscalMonths.map((m, i) => {
+              const v = profits[i];
+              const isActive = m === state.activeMonth;
+              const isNeg = v < 0;
+              const bh = v !== 0 ? Math.max(Math.abs(v) / maxP * H * 0.85 + H * 0.15, 10) : 2;
+              const tp = H - bh;
+              const posCol = isActive ? '#16a34a' : '#bbf7d0';
+              const negCol = isActive ? '#dc2626' : '#fecaca';
+              const barCol = isNeg ? negCol : posCol;
+              const valColor = isActive ? (isNeg ? '#dc2626' : '#16a34a') : '#64748b';
+              const valStr = v !== 0 ? (Math.abs(v)/10000).toFixed(0) + '万' : '';
+              return '<div class="wf-col" style="flex:1;min-width:0" onmouseenter="showTT(event,\'' + m + ' 利益: ' + fmt(v) + '円\')" onmouseleave="hideTT()">'
+                + '<div style="height:' + tp + 'px;width:100%"></div>'
+                + '<div style="height:' + bh + 'px;background:' + barCol + ';border-radius:3px 3px 0 0;width:100%;' + (isActive?'box-shadow:0 0 0 2px '+(isNeg?'#dc2626':'#16a34a')+';':'') + '"></div>'
+                + '<div style="font-size:9px;color:' + valColor + ';text-align:center;font-family:\'DM Mono\',monospace;margin-top:2px;font-weight:700">' + (isNeg?'▲':'') + valStr + '</div>'
+                + '<span class="wf-l" style="font-size:9px;' + (isActive?'color:'+(isNeg?'#dc2626':'#16a34a')+';font-weight:900':'color:var(--muted)') + '">' + m.replace('月','') + '</span>'
+                + '</div>';
+            }).join('')
+            + '</div></div>';
+        }
+
+        return revChart + profitChart;
       })()
     + '</div></div>';
 }
