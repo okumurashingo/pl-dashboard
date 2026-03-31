@@ -161,7 +161,7 @@ body { font-family:'Noto Sans JP',sans-serif; background:var(--bg); color:var(--
 /* ══ CARD ══ */
 .card { background:#fff; border-radius:10px; box-shadow:var(--shadow); border:1px solid var(--border); }
 .card-p { padding:16px 20px; }
-.card-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:3px; }
+.card-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:10px; }
 .card-sub { font-size:11px; color:var(--muted); margin-bottom:12px; line-height:1.6; }
 
 /* ══ KPI BIG ══ */
@@ -2006,11 +2006,11 @@ function renderDetail(entity) {
           const maxR = Math.max(...revData);
           const minR = Math.min(...revData);
           const rangeR = maxR - minR || 1;
-          revChart = '<div class="card card-p"><div class="card-title">年間売上推移（10月〜9月）</div><div class="wf-wrap" style="align-items:flex-end;height:180px">'
+          revChart = '<div class="card card-p"><div class="card-title">年間売上推移（10月〜9月）</div><div class="wf-wrap" style="align-items:flex-end;height:160px;margin-top:8px">'
             + fiscalMonths.map((m, i) => {
               const v = revenues[i];
               const isActive = m === state.activeMonth;
-              const bh = v > 0 ? Math.max(H2 * 0.15 + (v - minR) / rangeR * H2 * 0.85, 12) : 3;
+              const bh = v > 0 ? Math.max(H2 * 0.35 + (v - minR) / rangeR * H2 * 0.65, 12) : 3;
               const tp = H2 - bh;
               const barCol = isActive ? '#0d9488' : '#99f6e4';
               const valColor = isActive ? '#0d9488' : '#94a3b8';
@@ -2030,7 +2030,7 @@ function renderDetail(entity) {
           const maxP = Math.max(...absVals);
           const minP = Math.min(...absVals);
           const rangeP = maxP - minP || 1;
-          profitChart = '<div class="card card-p"><div class="card-title">年間利益推移（10月〜9月）</div><div class="wf-wrap" style="align-items:flex-end;height:180px">'
+          profitChart = '<div class="card card-p"><div class="card-title">年間利益推移（10月〜9月）</div><div class="wf-wrap" style="align-items:flex-end;height:160px;margin-top:8px">'
             + fiscalMonths.map((m, i) => {
               const v = profits[i];
               const isActive = m === state.activeMonth;
