@@ -161,7 +161,7 @@ body { font-family:'Noto Sans JP',sans-serif; background:var(--bg); color:var(--
 /* ══ CARD ══ */
 .card { background:#fff; border-radius:10px; box-shadow:var(--shadow); border:1px solid var(--border); }
 .card-p { padding:16px 20px; }
-.card-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:10px; }
+.card-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:10px; position:relative; z-index:2; background:#fff; padding:2px 0; }
 .card-sub { font-size:11px; color:var(--muted); margin-bottom:12px; line-height:1.6; }
 
 /* ══ KPI BIG ══ */
@@ -226,7 +226,7 @@ tr:hover .rate-dim { color:var(--muted); }
 .neg { color:var(--red); }
 
 /* ══ WATERFALL ══ */
-.wf-wrap { height:180px; display:flex; align-items:flex-end; gap:6px; padding-bottom:22px; }
+.wf-wrap { height:160px; display:flex; align-items:flex-end; gap:6px; padding-bottom:22px; overflow:hidden; }
 .wf-col { flex:1; height:100%; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; position:relative; cursor:pointer; }
 .wf-bar { width:100%; border-radius:3px 3px 0 0; transition:opacity .2s; }
 .wf-bar:hover { opacity:.75; }
@@ -1910,7 +1910,7 @@ function renderDetail(entity) {
           budgetHtml = `<div style="margin-top:5px">${statusText}<div style="height:4px;background:#e5e7eb;border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:100%;background:${barColor};border-radius:2px"></div></div></div>`;
         } else {
           const barColor = '#16a34a';
-          const statusText = `<span style="font-size:10px;color:var(--muted)">予算: ${fmt(budgetVal)}</span> / <span style="background:#16a34a;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700">▼${fmt(saved)} 節約</span>`;
+          const statusText = `<span style="font-size:10px;color:var(--muted)">予算: ${fmt(budgetVal)}</span> / <span style="background:#16a34a;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700">▼${fmt(saved)} 予算残</span>`;
           budgetHtml = `<div style="margin-top:5px">${statusText}<div style="height:4px;background:#e5e7eb;border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:${ratio.toFixed(1)}%;background:${barColor};border-radius:2px"></div></div></div>`;
         }
       } else {
@@ -1982,7 +1982,7 @@ function renderDetail(entity) {
         const H = 140;
 
         // ── 共通バー生成関数（最小値起点でメリハリ） ──
-        const H2 = 160;
+        const H2 = 130;
 
         // ── スリムバー生成（共通） ──
         function makeSlimBar(bh, tp, barCol, isActive, accentCol, valStr, valColor, m, labelColor) {
@@ -2006,7 +2006,7 @@ function renderDetail(entity) {
           const maxR = Math.max(...revData);
           const minR = Math.min(...revData);
           const rangeR = maxR - minR || 1;
-          revChart = '<div class="card card-p"><div class="card-title">年間売上推移（10月〜9月）</div><div class="wf-wrap" style="align-items:flex-end;height:160px;margin-top:8px">'
+          revChart = '<div class="card card-p"><div class="card-title">年間売上推移（10月〜9月）</div><div class="wf-wrap" style="align-items:flex-end;height:150px;margin-top:8px;overflow:hidden">'
             + fiscalMonths.map((m, i) => {
               const v = revenues[i];
               const isActive = m === state.activeMonth;
@@ -2030,7 +2030,7 @@ function renderDetail(entity) {
           const maxP = Math.max(...absVals);
           const minP = Math.min(...absVals);
           const rangeP = maxP - minP || 1;
-          profitChart = '<div class="card card-p"><div class="card-title">年間利益推移（10月〜9月）</div><div class="wf-wrap" style="align-items:flex-end;height:160px;margin-top:8px">'
+          profitChart = '<div class="card card-p"><div class="card-title">年間利益推移（10月〜9月）</div><div class="wf-wrap" style="align-items:flex-end;height:150px;margin-top:8px;overflow:hidden">'
             + fiscalMonths.map((m, i) => {
               const v = profits[i];
               const isActive = m === state.activeMonth;
