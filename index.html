@@ -188,12 +188,12 @@ body { font-family:'Noto Sans JP',sans-serif; background:var(--bg); color:var(--
 .chart-grid-2 { display:grid; grid-template-columns:320px 1fr; gap:14px; margin-bottom:14px; }
 
 /* ══ HBAR ══ */
-.hbar-item { display:flex; align-items:center; gap:10px; margin-bottom:7px; }
+.hbar-item { display:flex; align-items:center; gap:8px; margin-bottom:7px; }
 .hbar-label { font-size:11px; color:var(--text2); width:82px; flex-shrink:0; text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .hbar-track { flex:1; height:20px; background:var(--bg); border-radius:5px; overflow:hidden; cursor:pointer; border:1px solid var(--border); }
-.hbar-fill { height:100%; border-radius:4px; transition:width .8s ease; display:flex; align-items:center; justify-content:flex-end; padding-right:6px; }
-.hbar-val { font-family:'DM Mono',monospace; font-size:9px; color:#fff; font-weight:700; white-space:nowrap; }
-.hbar-axis { display:flex; justify-content:space-between; padding-left:92px; font-size:10px; color:var(--muted); margin-top:3px; font-family:'DM Mono',monospace; }
+.hbar-fill { height:100%; border-radius:4px; transition:width .8s ease; }
+.hbar-val { font-family:'DM Mono',monospace; font-size:11px; color:var(--text); font-weight:700; white-space:nowrap; width:52px; flex-shrink:0; text-align:right; }
+.hbar-axis { display:flex; justify-content:space-between; padding-left:92px; padding-right:60px; font-size:10px; color:var(--muted); margin-top:3px; font-family:'DM Mono',monospace; }
 
 /* ══ RANK TABLE ══ */
 .rank-table { width:100%; border-collapse:collapse; font-size:12px; }
@@ -417,8 +417,8 @@ tr:hover .rate-dim { color:var(--muted); }
   .card-title { font-size:14px !important; margin-bottom:10px !important; }
 
   /* ── Horizontal bar chart ── */
-  .hbar-label { min-width:60px !important; font-size:11px !important; }
-  .hbar-val { font-size:11px !important; }
+  .hbar-label { min-width:56px !important; width:56px !important; font-size:10px !important; }
+  .hbar-val { font-size:10px !important; width:46px !important; }
 
   /* ── PL Table ── */
   .pl-table { font-size:12px !important; }
@@ -1968,13 +1968,13 @@ function drawHBar(ranked, maxAbsProfit) {
     const v = r._c?.profit||0;
     const pct = Math.abs(v) / maxAbsProfit * 100;
     const color = v >= 0 ? '#2ab4b4' : '#dc2626';
+    const valTxt = (v<0?'▲':'') + Math.abs(Math.round(v/10000)).toLocaleString() + '万';
     return `<div class="hbar-item" onclick="setActive('${r.id}')">
       <div class="hbar-label" title="${r.name}">${r.name}</div>
       <div class="hbar-track" onmouseenter="showTT(event,'${r.name}: ${fmt(v)}円 / 利益率${fmtR(r._c?.profitRate||0)}')" onmouseleave="hideTT()">
-        <div class="hbar-fill" style="width:${pct}%;background:${color}">
-          ${pct>12?`<span class="hbar-val">${Math.abs(Math.round(v/10000)).toLocaleString()}万</span>`:''}
-        </div>
+        <div class="hbar-fill" style="width:${pct}%;background:${color}"></div>
       </div>
+      <span class="hbar-val">${valTxt}</span>
     </div>`;
   }).join('');
   const axisVals = Array.from({length:steps+1},(_,i)=>Math.round(maxAbsProfit/steps*i));
