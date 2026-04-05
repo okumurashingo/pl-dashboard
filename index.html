@@ -1,6 +1,6 @@
 <html lang="ja"><head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -308,21 +308,24 @@ tr:hover .rate-dim { color:var(--muted); }
   .sidebar { display:none !important; }
   .menu-toggle { display:none !important; }
 
-  /* ── Bottom bar for store switching ── */
+  /* ── Bottom bar for store switching — always visible ── */
   .mobile-bottom-bar {
     display:flex !important; position:fixed; bottom:0; left:0; right:0;
-    height:52px; background:var(--sidebar-bg); color:#fff;
+    height:46px; background:var(--sidebar-bg); color:#fff;
+    padding-bottom:env(safe-area-inset-bottom, 0px);
     align-items:center; justify-content:center; gap:10px;
-    font-size:14px; font-weight:700; z-index:1000;
+    font-size:14px; font-weight:700; z-index:10001;
     cursor:pointer; box-shadow:0 -2px 12px rgba(0,0,0,.25);
     -webkit-tap-highlight-color:transparent;
+    transform:translate3d(0,0,0); /* force GPU layer for iOS */
+    -webkit-transform:translate3d(0,0,0);
   }
   .mobile-bottom-bar:active { background:var(--sidebar-dark); }
 
   /* ── Store picker modal ── */
   .sp-modal-overlay {
     display:none; position:fixed; top:0; left:0; right:0; bottom:0;
-    background:rgba(0,0,0,.5); z-index:2000;
+    background:rgba(0,0,0,.5); z-index:10002;
   }
   .sp-modal-overlay.show { display:flex; align-items:flex-end; }
   .sp-modal {
@@ -349,9 +352,9 @@ tr:hover .rate-dim { color:var(--muted); }
   .sp-item-badge.pos { color:var(--green); }
   .sp-item-badge.neg { color:var(--red); }
 
-  /* ── Main content full width ── */
-  .app { height:auto !important; min-height:calc(100vh - 50px) !important; }
-  .main { width:100% !important; padding-bottom:60px !important; }
+  /* ── Main content full width — body scrolls, not .main ── */
+  .app { height:auto !important; min-height:auto !important; overflow:visible !important; }
+  .main { width:100% !important; padding-bottom:70px !important; overflow:visible !important; height:auto !important; flex:none !important; }
 
   /* ── Topbar: simplified ── */
   .topbar { padding:0 14px !important; gap:10px !important; }
@@ -375,43 +378,47 @@ tr:hover .rate-dim { color:var(--muted); }
   .tab-group { display:none !important; }
 
   /* ── Content area ── */
-  .content { padding:12px 12px 20px !important; }
+  .content { padding:14px 14px 24px !important; }
 
-  /* ── KPI cards: 1 column (like previous mobile version) ── */
+  /* ── KPI grids: 2 columns with breathing room ── */
   [style*="grid-template-columns:repeat(4"] {
-    grid-template-columns:repeat(2, 1fr) !important; gap:8px !important;
+    grid-template-columns:repeat(2, 1fr) !important; gap:10px !important;
   }
   [style*="grid-template-columns:repeat(6"] {
-    grid-template-columns:repeat(2, 1fr) !important; gap:8px !important;
+    grid-template-columns:repeat(2, 1fr) !important; gap:10px !important;
   }
   [style*="grid-template-columns:repeat(3"] {
-    grid-template-columns:repeat(2, 1fr) !important; gap:8px !important;
+    grid-template-columns:repeat(2, 1fr) !important; gap:10px !important;
   }
   [style*="grid-template-columns:repeat(2,1fr)"] {
-    grid-template-columns:repeat(2, 1fr) !important; gap:8px !important;
+    grid-template-columns:repeat(2, 1fr) !important; gap:10px !important;
   }
 
   /* ── KPI big cards ── */
-  .kpi-row { grid-template-columns:1fr !important; gap:10px !important; }
-  .kpi-big { padding:16px 18px !important; }
+  .kpi-row { grid-template-columns:1fr !important; gap:12px !important; }
+  .kpi-big { padding:18px 20px !important; }
   .kpi-big-value { font-size:26px !important; }
 
-  /* ── KPI small cards: larger for mobile touch ── */
+  /* ── KPI small cards: spacious for mobile ── */
   .kpi-small {
-    padding:12px 14px !important;
+    padding:14px 16px !important;
     border-radius:12px !important;
+    min-height:auto !important;
   }
-  .kpi-small-value { font-size:18px !important; }
-  .kpi-small-label { font-size:11px !important; }
-  .kpi-small-rate { font-size:11px !important; }
-  .kpi-small-label { font-size:12px !important; }
+  .kpi-small-value { font-size:20px !important; }
+  .kpi-small-label { font-size:12px !important; line-height:1.3 !important; }
+  .kpi-small-rate { font-size:12px !important; }
 
   /* ── Chart grid stack ── */
-  .chart-grid-2 { grid-template-columns:1fr !important; }
+  .chart-grid-2 { grid-template-columns:1fr !important; gap:14px !important; }
+
+  /* ── Section cards ── */
+  .card { padding:16px 14px !important; margin-bottom:12px !important; border-radius:14px !important; }
+  .card-title { font-size:14px !important; margin-bottom:10px !important; }
 
   /* ── Horizontal bar chart ── */
-  .hbar-label { min-width:60px !important; font-size:10px !important; }
-  .hbar-val { font-size:10px !important; }
+  .hbar-label { min-width:60px !important; font-size:11px !important; }
+  .hbar-val { font-size:11px !important; }
 
   /* ── PL Table ── */
   .pl-table { font-size:12px !important; }
@@ -424,13 +431,17 @@ tr:hover .rate-dim { color:var(--muted); }
 
   /* ── Overview KPI small row (6 columns → 2 columns) ── */
   [style*="grid-template-columns:repeat(6,1fr)"] {
-    grid-template-columns:repeat(2, 1fr) !important; gap:8px !important;
+    grid-template-columns:repeat(2, 1fr) !important; gap:10px !important;
   }
+
+  /* ── Subheader store name ── */
+  .entity-name { margin-bottom:4px !important; }
 }
 
 @media (max-width: 480px) {
-  .kpi-small-value { font-size:20px !important; }
+  .kpi-small-value { font-size:18px !important; }
   .kpi-big-value { font-size:22px !important; }
+  .content { padding:12px 10px 20px !important; }
 }
 
 @media print {
@@ -5036,6 +5047,24 @@ if (document.readyState === 'loading') {
 } else {
   autoLoad();
 }
+
+// ── iOS Safari: keep bottom bar visible when virtual keyboard / toolbar shifts viewport ──
+(function(){
+  if (typeof window.visualViewport === 'undefined') return;
+  var bar = document.querySelector('.mobile-bottom-bar');
+  if (!bar) return;
+  function fixBar() {
+    var vv = window.visualViewport;
+    var offset = window.innerHeight - vv.height - vv.offsetTop;
+    if (offset > 0) {
+      bar.style.bottom = offset + 'px';
+    } else {
+      bar.style.bottom = '0px';
+    }
+  }
+  window.visualViewport.addEventListener('resize', fixBar);
+  window.visualViewport.addEventListener('scroll', fixBar);
+})();
 
 </script>
 
