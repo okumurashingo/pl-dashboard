@@ -1972,7 +1972,7 @@ function drawHBar(ranked, maxAbsProfit) {
       <div class="hbar-label" title="${r.name}">${r.name}</div>
       <div class="hbar-track" onmouseenter="showTT(event,'${r.name}: ${fmt(v)}円 / 利益率${fmtR(r._c?.profitRate||0)}')" onmouseleave="hideTT()">
         <div class="hbar-fill" style="width:${pct}%;background:${color}">
-          ${pct>16?`<span class="hbar-val">${fmt(v)}</span>`:''}
+          ${pct>12?`<span class="hbar-val">${Math.abs(Math.round(v/10000)).toLocaleString()}万</span>`:''}
         </div>
       </div>
     </div>`;
