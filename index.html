@@ -4749,6 +4749,23 @@ function selectStore(id) {
   window.scrollTo(0, 0);
 }
 
+// データが入力されている最新の月を検出
+function detectLatestMonth() {
+  var latest = 0; // MONTHSのindex
+  state.entities.forEach(function(e) {
+    if (e.type === 'overview') return;
+    MONTHS.forEach(function(m, idx) {
+      var d = e.data[m];
+      if (!d) return;
+      // revenue or customerCount or vendorsに値があればデータ入力済みと判定
+      if ((d.revenue && d.revenue > 0) || (d.customerCount && d.customerCount > 0)) {
+        if (idx > latest) latest = idx;
+      }
+    });
+  });
+  state.activeMonth = MONTHS[latest];
+}
+
 function autoLoad() {
   // 0. window.__SAVED_STATE__を直接参照（Safari対応・scriptタグ実行済み）
   try {
@@ -4758,6 +4775,7 @@ function autoLoad() {
       try { localStorage.setItem(LS_KEY, JSON.stringify({ entities: state.entities, cfData: state.cfData })); } catch(e2){}
       propagateVendorStructure();
       syncCentralKitchenRevenue();
+      detectLatestMonth();
       render();
       return;
     }
@@ -4804,6 +4822,7 @@ function autoLoad() {
 
   propagateVendorStructure();
   syncCentralKitchenRevenue();
+  detectLatestMonth();
   render();
 }
 
