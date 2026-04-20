@@ -2876,6 +2876,7 @@ function saveDataOnly(entityId) {
 
 function saveEdit(entityId) {
   saveDataOnly(entityId);
+  stampCurrentMonth();
   syncCentralKitchenRevenue();
   state.editMode = false;
   render();
@@ -3324,6 +3325,7 @@ function hideTT() {
 }
 
 function saveHtml() {
+  stampCurrentMonth();
   const payload = JSON.stringify({ entities: state.entities, cfData: state.cfData });
   let h = document.documentElement.outerHTML;
   const S = '<scr' + 'ipt id="embedded-state">';
@@ -4695,6 +4697,7 @@ const LS_KEY = 'pl_dashboard_autosave';
 
 function autoSave() {
   try {
+    stampCurrentMonth();
     localStorage.setItem(LS_KEY, JSON.stringify({ entities: state.entities, cfData: state.cfData }));
   } catch(e) {}
 }
@@ -4749,21 +4752,47 @@ function selectStore(id) {
   window.scrollTo(0, 0);
 }
 
-// データが入力されている最新の月を検出
+// 最後に更新された月を検出（各月の _lastEdited タイムスタンプを参照）
 function detectLatestMonth() {
-  var latest = 0; // MONTHSのindex
+  var bestTs = 0, bestMonth = null;
   state.entities.forEach(function(e) {
     if (e.type === 'overview') return;
-    MONTHS.forEach(function(m, idx) {
+    MONTHS.forEach(function(m) {
       var d = e.data[m];
-      if (!d) return;
-      // revenue or customerCount or vendorsに値があればデータ入力済みと判定
-      if ((d.revenue && d.revenue > 0) || (d.customerCount && d.customerCount > 0)) {
-        if (idx > latest) latest = idx;
+      if (!d || !d._lastEdited) return;
+      if (d._lastEdited > bestTs) {
+        bestTs = d._lastEdited;
+        bestMonth = m;
       }
     });
   });
-  state.activeMonth = MONTHS[latest];
+  // タイムスタンプがある場合はその月を使用、なければデータがある最新月にフォールバック
+  if (bestMonth) {
+    state.activeMonth = bestMonth;
+  } else {
+    var latest = 0;
+    state.entities.forEach(function(e) {
+      if (e.type === 'overview') return;
+      MONTHS.forEach(function(m, idx) {
+        var d = e.data[m];
+        if (!d) return;
+        if ((d.revenue && d.revenue > 0) || (d.customerCount && d.customerCount > 0)) {
+          if (idx > latest) latest = idx;
+        }
+      });
+    });
+    state.activeMonth = MONTHS[latest];
+  }
+}
+
+// 現在の月のデータに更新タイムスタンプを記録
+function stampCurrentMonth() {
+  var ts = Date.now();
+  state.entities.forEach(function(e) {
+    if (e.type === 'overview') return;
+    var d = e.data[state.activeMonth];
+    if (d) d._lastEdited = ts;
+  });
 }
 
 function autoLoad() {
