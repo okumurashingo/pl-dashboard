@@ -2,6 +2,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>PL マルチ店舗ダッシュボード</title>
@@ -4752,39 +4753,40 @@ function selectStore(id) {
   window.scrollTo(0, 0);
 }
 
-// 最後に更新された月を検出（各月の _lastEdited タイムスタンプを参照）
+// 最後に更新された月を検出
 function detectLatestMonth() {
+  // 1) _lastEdited タイムスタンプがあればそれを使用
   var bestTs = 0, bestMonth = null;
-  state.entities.forEach(function(e) {
-    if (e.type === 'overview') return;
-    MONTHS.forEach(function(m) {
-      var d = e.data[m];
-      if (!d || !d._lastEdited) return;
-      if (d._lastEdited > bestTs) {
+  for (var i = 0; i < state.entities.length; i++) {
+    var e = state.entities[i];
+    if (e.type === 'overview') continue;
+    for (var j = 0; j < MONTHS.length; j++) {
+      var d = (e.data || {})[MONTHS[j]];
+      if (d && d._lastEdited && d._lastEdited > bestTs) {
         bestTs = d._lastEdited;
-        bestMonth = m;
+        bestMonth = MONTHS[j];
       }
-    });
-  });
-  // タイムスタンプがある場合はその月を使用、なければデータがある最新月にフォールバック
-  if (bestMonth) {
-    state.activeMonth = bestMonth;
-  } else {
-    // 実店舗（type=store）で客数が入っている月のうち最も遅い月を検出
-    // ※ CKや本部は自動計算で全月にデータが入るため除外
-    var latest = 0;
-    var stores = state.entities.filter(function(e){ return e.type === 'store'; });
-    MONTHS.forEach(function(m, idx) {
-      var count = 0;
-      stores.forEach(function(e) {
-        var d = e.data[m];
-        if (d && d.customerCount && d.customerCount > 0) count++;
-      });
-      // 半数以上の店舗に客数データがあれば入力済みとみなす
-      if (count >= Math.max(stores.length * 0.3, 2)) latest = idx;
-    });
-    state.activeMonth = MONTHS[latest];
+    }
   }
+  if (bestMonth) { state.activeMonth = bestMonth; return; }
+
+  // 2) フォールバック：実店舗の客数データで判定
+  var stores = [];
+  for (var i = 0; i < state.entities.length; i++) {
+    if (state.entities[i].type === 'store') stores.push(state.entities[i]);
+  }
+  var thresh = stores.length > 5 ? Math.floor(stores.length * 0.3) : 2;
+  var result = MONTHS[0]; // デフォルト10月
+  for (var j = 0; j < MONTHS.length; j++) {
+    var cnt = 0;
+    for (var i = 0; i < stores.length; i++) {
+      var d = (stores[i].data || {})[MONTHS[j]];
+      if (d && d.customerCount > 0) cnt++;
+    }
+    if (cnt >= thresh) result = MONTHS[j];
+  }
+  state.activeMonth = result;
+  console.log('[detectLatestMonth] result:', result, '(stores:', stores.length, 'thresh:', thresh, ')');
 }
 
 // 現在の月のデータに更新タイムスタンプを記録
