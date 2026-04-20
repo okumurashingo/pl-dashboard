@@ -4770,16 +4770,18 @@ function detectLatestMonth() {
   if (bestMonth) {
     state.activeMonth = bestMonth;
   } else {
+    // 実店舗（type=store）で客数が入っている月のうち最も遅い月を検出
+    // ※ CKや本部は自動計算で全月にデータが入るため除外
     var latest = 0;
-    state.entities.forEach(function(e) {
-      if (e.type === 'overview') return;
-      MONTHS.forEach(function(m, idx) {
+    var stores = state.entities.filter(function(e){ return e.type === 'store'; });
+    MONTHS.forEach(function(m, idx) {
+      var count = 0;
+      stores.forEach(function(e) {
         var d = e.data[m];
-        if (!d) return;
-        if ((d.revenue && d.revenue > 0) || (d.customerCount && d.customerCount > 0)) {
-          if (idx > latest) latest = idx;
-        }
+        if (d && d.customerCount && d.customerCount > 0) count++;
       });
+      // 半数以上の店舗に客数データがあれば入力済みとみなす
+      if (count >= Math.max(stores.length * 0.3, 2)) latest = idx;
     });
     state.activeMonth = MONTHS[latest];
   }
