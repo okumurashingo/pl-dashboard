@@ -1121,7 +1121,7 @@ if (sessionStorage.getItem('pl_auth') === '1') {
           ・文字コード: <b>Shift-JIS</b>（自動対応）<br>
           ・対象月はCSVの年月列から自動判定<br>
           ・各店舗の月末累計値（売上・予算・客数・前年）を反映<br>
-          ・売上は税抜→税込（×1.1）に自動変換
+          ・売上・予算はCSVの値をそのまま反映
         </span>
       </div>
       <div id="mksnDropZone2" style="border:2px dashed var(--border);border-radius:8px;padding:28px;text-align:center;cursor:pointer;background:#fafafa;transition:all .15s"
@@ -4405,10 +4405,10 @@ function parseMksnCsv(text) {
       matched.push({
         entity: entity,
         srcName: s.name,
-        revenue: Math.round(s.cumSales * 1.1),  // 税抜→税込（×1.1）
-        revenueNet: s.cumSales,
-        budget: Math.round(s.cumBudget * 1.1),   // 売上予算（税込換算）
-        prevYear: Math.round(s.cumPrevYr * 1.1),
+        revenue: s.cumSales,
+        revenueNet: Math.round(s.cumSales * 0.9),
+        budget: s.cumBudget,
+        prevYear: s.cumPrevYr,
         customers: s.cumCust,
         custBudget: s.cumCustBudget,              // 客数予算
         custPrevYear: s.cumCustPrev
@@ -4575,9 +4575,9 @@ function parseMksnCsv2(text) {
     if (entity) {
       matched.push({
         entity: entity, srcName: s.name,
-        revenue: Math.round(s.cumSales * 1.1),
-        budget: Math.round(s.cumBudget * 1.1),
-        prevYear: Math.round(s.cumPrevYr * 1.1),
+        revenue: s.cumSales,
+        budget: s.cumBudget,
+        prevYear: s.cumPrevYr,
         customers: s.cumCust,
         custBudget: s.cumCustBudget,
         custPrevYear: s.cumCustPrev
