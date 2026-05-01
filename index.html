@@ -1120,9 +1120,16 @@ if (sessionStorage.getItem('pl_auth') === '1') {
         <span style="color:var(--muted)">
           ・文字コード: <b>Shift-JIS</b>（自動対応）<br>
           ・対象月はCSVの年月列から自動判定<br>
-          ・各店舗の月末累計値（売上・予算・客数・前年）を反映<br>
-          ・売上・予算はCSVの値をそのまま反映
+          ・各店舗の月末累計値（売上・予算・客数・前年）を反映
         </span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
+        <label style="font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap">売上の税処理：</label>
+        <select id="mksnTaxMode2" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Noto Sans JP',sans-serif;flex:1" onchange="if(_mksnRawText2)parseMksnCsv2(_mksnRawText2)">
+          <option value="1.1">税抜→税込（×1.1）</option>
+          <option value="1.08">税抜→税込（×1.08 軽減税率）</option>
+          <option value="1.0">そのまま（税込データ）</option>
+        </select>
       </div>
       <div id="mksnDropZone2" style="border:2px dashed var(--border);border-radius:8px;padding:28px;text-align:center;cursor:pointer;background:#fafafa;transition:all .15s"
         onclick="document.getElementById('mksnFileInput2').click()"
@@ -4500,6 +4507,7 @@ function execMksnImport() {
 //  予算進捗状況表CSV取込（CSVインポートモーダル タブ3）
 // ══════════════════════════════════════
 let _mksnParsed2 = null;
+let _mksnRawText2 = null;
 
 function handleMksnDrop2(ev) {
   ev.preventDefault();
@@ -4517,6 +4525,7 @@ function handleMksnFile2(file) {
     var text;
     try { text = new TextDecoder('shift_jis').decode(uint8); }
     catch(err) { text = new TextDecoder('utf-8').decode(uint8); }
+    _mksnRawText2 = text;
     parseMksnCsv2(text);
   };
   reader.readAsArrayBuffer(file);
@@ -4543,6 +4552,11 @@ function parseMksnCsv2(text) {
     return;
   }
 
+  // 税率の取得
+  var taxSel = document.getElementById('mksnTaxMode2');
+  var taxRate = taxSel ? parseFloat(taxSel.value) : 1.1;
+
+  // 日別データを店舗ごとに集計（per-day税計算）
   var storeMap = {};
   var csvMonth = '';
   for (var i = 1; i < lines.length; i++) {
@@ -4552,15 +4566,23 @@ function parseMksnCsv2(text) {
     var code = cols[1].trim();
     var name = cols[2].trim();
     if (!csvMonth && ym) csvMonth = ym;
-    storeMap[code] = {
-      name: name,
-      cumSales: parseInt(cols[11]) || 0,
-      cumBudget: parseInt(cols[12]) || 0,
-      cumPrevYr: parseInt(cols[14]) || 0,
-      cumCust: parseInt(cols[20]) || 0,
-      cumCustPrev: parseInt(cols[23]) || 0,
-      cumCustBudget: parseInt(cols[21]) || 0
-    };
+
+    var dailySales = parseInt(cols[6]) || 0;
+    var dailyPrev  = parseInt(cols[9]) || 0;
+
+    if (!storeMap[code]) {
+      storeMap[code] = {
+        name: name, dailySales: [], dailyPrev: [],
+        cumBudget: 0, cumCust: 0, cumCustPrev: 0, cumCustBudget: 0
+      };
+    }
+    storeMap[code].dailySales.push(dailySales);
+    storeMap[code].dailyPrev.push(dailyPrev);
+    // 累計値は最後の行を使う
+    storeMap[code].cumBudget = parseInt(cols[12]) || 0;
+    storeMap[code].cumCust = parseInt(cols[20]) || 0;
+    storeMap[code].cumCustPrev = parseInt(cols[23]) || 0;
+    storeMap[code].cumCustBudget = parseInt(cols[21]) || 0;
   }
 
   var monthNum = csvMonth ? parseInt(csvMonth.split('/')[1]) : 0;
@@ -4570,14 +4592,25 @@ function parseMksnCsv2(text) {
   var unmatched = [];
   Object.keys(storeMap).forEach(function(code) {
     var s = storeMap[code];
-    if (s.cumSales === 0 && s.cumCust === 0) return;
+    // 日別×税率で合計（端数はfloor）
+    var revSum = 0;
+    for (var j = 0; j < s.dailySales.length; j++) {
+      revSum += Math.floor(s.dailySales[j] * taxRate);
+    }
+    var prevSum = 0;
+    for (var j = 0; j < s.dailyPrev.length; j++) {
+      prevSum += Math.floor(s.dailyPrev[j] * taxRate);
+    }
+    var budgetVal = taxRate === 1.0 ? s.cumBudget : Math.round(s.cumBudget * taxRate);
+
+    if (revSum === 0 && s.cumCust === 0) return;
     var entity = matchStoreEntity(s.name, true);
     if (entity) {
       matched.push({
         entity: entity, srcName: s.name,
-        revenue: s.cumSales,
-        budget: s.cumBudget,
-        prevYear: s.cumPrevYr,
+        revenue: revSum,
+        budget: budgetVal,
+        prevYear: prevSum,
         customers: s.cumCust,
         custBudget: s.cumCustBudget,
         custPrevYear: s.cumCustPrev
