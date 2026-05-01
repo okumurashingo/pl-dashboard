@@ -1052,6 +1052,9 @@ if (sessionStorage.getItem('pl_auth') === '1') {
       <button id="csvTab2" onclick="switchCsvTab(2)" style="flex:1;padding:8px 6px;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;background:transparent;color:var(--muted);transition:all .15s;line-height:1.5">
         📋 汎用データ<br><span style="font-weight:400;font-size:10px">売上・経費などの手動CSV</span>
       </button>
+      <button id="csvTab3" onclick="switchCsvTab(3)" style="flex:1;padding:8px 6px;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;background:transparent;color:var(--muted);transition:all .15s;line-height:1.5">
+        📊 売上・予算CSV<br><span style="font-weight:400;font-size:10px">予算進捗状況表</span>
+      </button>
     </div>
 
     <!-- ── タブ1: 仕入先専用 ── -->
@@ -1106,6 +1109,39 @@ if (sessionStorage.getItem('pl_auth') === '1') {
       <div class="modal-btns">
         <button class="btn" onclick="closeCsvModal()">キャンセル</button>
         <button class="btn btn-primary" onclick="importCsv()">インポート実行</button>
+      </div>
+    </div>
+
+    <!-- ── タブ3: 予算進捗状況表CSV ── -->
+    <div id="csvPane3" style="display:none">
+      <div style="background:#fff;border:1px solid var(--teal-pale2);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:var(--text2);line-height:1.9">
+        <b style="color:var(--teal-dark)">📌 対応フォーマット</b><br>
+        まかせてネットの<b>帳票出力 → 予算進捗状況表</b>のCSV<br>
+        <span style="color:var(--muted)">
+          ・文字コード: <b>Shift-JIS</b>（自動対応）<br>
+          ・対象月はCSVの年月列から自動判定<br>
+          ・各店舗の月末累計値（売上・予算・客数・前年）を反映<br>
+          ・売上は税抜→税込（×1.1）に自動変換
+        </span>
+      </div>
+      <div id="mksnDropZone2" style="border:2px dashed var(--border);border-radius:8px;padding:28px;text-align:center;cursor:pointer;background:#fafafa;transition:all .15s"
+        onclick="document.getElementById('mksnFileInput2').click()"
+        ondragover="event.preventDefault();this.style.borderColor='var(--teal)';this.style.background='var(--teal-pale)'"
+        ondragleave="this.style.borderColor='var(--border)';this.style.background='#fafafa'"
+        ondrop="handleMksnDrop2(event)">
+        <div style="font-size:28px;margin-bottom:6px">📄</div>
+        <div style="font-size:13px;font-weight:700">クリック or ドラッグ＆ドロップ</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">予算進捗状況表CSVファイルを選択</div>
+      </div>
+      <input type="file" id="mksnFileInput2" accept=".csv" style="display:none" onchange="handleMksnFile2(this.files[0])">
+      <div id="mksnPreview2" style="display:none;margin-top:10px">
+        <div id="mksnPreviewTitle2" style="font-size:12px;font-weight:700;margin-bottom:6px"></div>
+        <div id="mksnPreviewList2" style="border:1px solid var(--border);border-radius:7px;max-height:220px;overflow-y:auto;font-size:11px"></div>
+      </div>
+      <div id="mksnError2" style="color:#dc2626;font-size:11px;margin-top:4px"></div>
+      <div class="modal-btns">
+        <button class="btn" onclick="closeCsvModal()">キャンセル</button>
+        <button class="btn btn-primary" id="mksnExecBtn2" onclick="execMksnImport2()" disabled style="opacity:.5">取込実行</button>
       </div>
     </div>
   </div>
@@ -3395,20 +3431,13 @@ function closeCsvModal() {
 }
 
 function switchCsvTab(n) {
-  const t1 = document.getElementById('csvTab1');
-  const t2 = document.getElementById('csvTab2');
-  const p1 = document.getElementById('csvPane1');
-  const p2 = document.getElementById('csvPane2');
-  if (n === 1) {
-    if (t1) { t1.style.background = 'var(--teal)'; t1.style.color = '#fff'; }
-    if (t2) { t2.style.background = 'transparent'; t2.style.color = 'var(--muted)'; }
-    if (p1) p1.style.display = '';
-    if (p2) p2.style.display = 'none';
-  } else {
-    if (t2) { t2.style.background = 'var(--teal)'; t2.style.color = '#fff'; }
-    if (t1) { t1.style.background = 'transparent'; t1.style.color = 'var(--muted)'; }
-    if (p1) p1.style.display = 'none';
-    if (p2) p2.style.display = '';
+  var tabs = ['csvTab1','csvTab2','csvTab3'];
+  var panes = ['csvPane1','csvPane2','csvPane3'];
+  for (var i = 0; i < tabs.length; i++) {
+    var t = document.getElementById(tabs[i]);
+    var p = document.getElementById(panes[i]);
+    if (t) { t.style.background = (i === n-1) ? 'var(--teal)' : 'transparent'; t.style.color = (i === n-1) ? '#fff' : 'var(--muted)'; }
+    if (p) p.style.display = (i === n-1) ? '' : 'none';
   }
 }
 
@@ -4461,6 +4490,168 @@ function execMksnImport() {
   });
 
   closeMksnModal();
+  clearAllCache();
+  render();
+  autoSave();
+  notif('✅ ' + month + ' に ' + count + '店舗の売上・予算・客数・前年データを取り込みました');
+}
+
+// ══════════════════════════════════════
+//  予算進捗状況表CSV取込（CSVインポートモーダル タブ3）
+// ══════════════════════════════════════
+let _mksnParsed2 = null;
+
+function handleMksnDrop2(ev) {
+  ev.preventDefault();
+  ev.currentTarget.style.borderColor = 'var(--border)';
+  ev.currentTarget.style.background = '#fafafa';
+  var file = ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+  if (file) handleMksnFile2(file);
+}
+
+function handleMksnFile2(file) {
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var uint8 = new Uint8Array(e.target.result);
+    var text;
+    try { text = new TextDecoder('shift_jis').decode(uint8); }
+    catch(err) { text = new TextDecoder('utf-8').decode(uint8); }
+    parseMksnCsv2(text);
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function parseMksnCsv2(text) {
+  var errEl = document.getElementById('mksnError2');
+  var prevEl = document.getElementById('mksnPreview2');
+  var titleEl = document.getElementById('mksnPreviewTitle2');
+  var listEl = document.getElementById('mksnPreviewList2');
+  var execBtn = document.getElementById('mksnExecBtn2');
+  errEl.textContent = '';
+  prevEl.style.display = 'none';
+  execBtn.disabled = true;
+  execBtn.style.opacity = '.5';
+  _mksnParsed2 = null;
+
+  var lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) { errEl.textContent = 'CSVが空です'; return; }
+
+  var header = lines[0];
+  if (!header.includes('累計売上') && !header.includes('累計客数')) {
+    errEl.textContent = '予算進捗状況表のCSVではないようです（累計売上・累計客数カラムが見つかりません）';
+    return;
+  }
+
+  var storeMap = {};
+  var csvMonth = '';
+  for (var i = 1; i < lines.length; i++) {
+    var cols = lines[i].split(',');
+    if (cols.length < 22) continue;
+    var ym = cols[0].trim();
+    var code = cols[1].trim();
+    var name = cols[2].trim();
+    if (!csvMonth && ym) csvMonth = ym;
+    storeMap[code] = {
+      name: name,
+      cumSales: parseInt(cols[11]) || 0,
+      cumBudget: parseInt(cols[12]) || 0,
+      cumPrevYr: parseInt(cols[14]) || 0,
+      cumCust: parseInt(cols[20]) || 0,
+      cumCustPrev: parseInt(cols[23]) || 0,
+      cumCustBudget: parseInt(cols[21]) || 0
+    };
+  }
+
+  var monthNum = csvMonth ? parseInt(csvMonth.split('/')[1]) : 0;
+  var monthLabel = monthNum ? monthNum + '月' : state.activeMonth;
+
+  var matched = [];
+  var unmatched = [];
+  Object.keys(storeMap).forEach(function(code) {
+    var s = storeMap[code];
+    if (s.cumSales === 0 && s.cumCust === 0) return;
+    var entity = matchStoreEntity(s.name, true);
+    if (entity) {
+      matched.push({
+        entity: entity, srcName: s.name,
+        revenue: Math.round(s.cumSales * 1.1),
+        budget: Math.round(s.cumBudget * 1.1),
+        prevYear: Math.round(s.cumPrevYr * 1.1),
+        customers: s.cumCust,
+        custBudget: s.cumCustBudget,
+        custPrevYear: s.cumCustPrev
+      });
+    } else {
+      unmatched.push(s.name);
+    }
+  });
+
+  if (matched.length === 0) { errEl.textContent = 'マッチする店舗が見つかりませんでした'; return; }
+
+  titleEl.textContent = '📊 ' + monthLabel + ' のデータ（' + matched.length + '店舗）';
+  var html = '<table style="width:100%;border-collapse:collapse;font-size:11px">'
+    + '<tr style="background:var(--teal-pale);font-weight:700">'
+    + '<td style="padding:4px 6px">CSV店舗</td>'
+    + '<td style="padding:4px 6px">→ ダッシュボード</td>'
+    + '<td style="padding:4px 6px;text-align:right">売上(税込)</td>'
+    + '<td style="padding:4px 6px;text-align:right">予算(税込)</td>'
+    + '<td style="padding:4px 6px;text-align:right">客数</td></tr>';
+  matched.forEach(function(m) {
+    html += '<tr style="border-top:1px solid var(--border)">'
+      + '<td style="padding:3px 6px;color:var(--muted);font-size:10px">' + m.srcName + '</td>'
+      + '<td style="padding:3px 6px;font-weight:600">' + m.entity.name + '</td>'
+      + '<td style="padding:3px 6px;text-align:right">' + m.revenue.toLocaleString() + '</td>'
+      + '<td style="padding:3px 6px;text-align:right;color:var(--muted)">' + m.budget.toLocaleString() + '</td>'
+      + '<td style="padding:3px 6px;text-align:right">' + m.customers.toLocaleString() + '</td></tr>';
+  });
+  if (unmatched.length) {
+    html += '<tr style="border-top:1px solid var(--border);background:#fff5f5"><td colspan="5" style="padding:4px 6px;color:#dc2626">⚠️ 未マッチ: ' + unmatched.join(', ') + '</td></tr>';
+  }
+  html += '</table>';
+
+  listEl.innerHTML = html;
+  prevEl.style.display = 'block';
+  _mksnParsed2 = { month: monthLabel, data: matched };
+  execBtn.disabled = false;
+  execBtn.style.opacity = '1';
+
+  var dz = document.getElementById('mksnDropZone2');
+  if (dz) {
+    dz.innerHTML = '<div style="font-size:20px">✅</div><div style="font-size:12px;font-weight:700;color:var(--teal-dark)">' + monthLabel + ' / ' + matched.length + '店舗読み込み済み</div>';
+    dz.style.borderColor = 'var(--teal)';
+    dz.style.background = 'var(--teal-pale)';
+  }
+}
+
+function execMksnImport2() {
+  if (!_mksnParsed2 || !_mksnParsed2.data || _mksnParsed2.data.length === 0) return;
+  var month = _mksnParsed2.month;
+
+  if (state.editMode) {
+    var activeEntity = state.entities.find(function(e) { return e.id === state.activeId; });
+    if (activeEntity) saveDataOnly(activeEntity.id);
+  }
+
+  var count = 0;
+  _mksnParsed2.data.forEach(function(m) {
+    var d = m.entity.data[month];
+    if (!d) return;
+    d.revenue = m.revenue;
+    d.customerCount = m.customers;
+    if (m.budget > 0) d.budgetRevenue = m.budget;
+    if (m.custBudget > 0) d.budgetCustomerCount = m.custBudget;
+    if (!m.entity.prevYear) m.entity.prevYear = {};
+    if (!m.entity.prevYear[month]) m.entity.prevYear[month] = emptyPrevMonth();
+    var py = m.entity.prevYear[month];
+    if (py && m.prevYear > 0) {
+      py.revenue = m.prevYear;
+      py.customerCount = m.custPrevYear || 0;
+    }
+    count++;
+  });
+
+  closeCsvModal();
   clearAllCache();
   render();
   autoSave();
